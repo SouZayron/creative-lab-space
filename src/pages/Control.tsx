@@ -178,8 +178,35 @@ export const Control = () => {
       supabase.from("game_picks").delete().eq("room_id", room.id)
     ));
     await supabase.from("game_rooms").update({ is_open: false }).eq("is_open", true);
+
+    // Reset do módulo de cartelas
+    let cartelaUser = "";
+    try {
+      const st = JSON.parse(localStorage.getItem("control_cartelas_state") || "{}");
+      cartelaUser = st?.generatedCards?.[0]?.userName || "";
+    } catch { /* noop */ }
+    if (cartelaUser) {
+      await supabase.from("bingo_cards").delete().eq("user_name", cartelaUser);
+    }
+    await supabase.from("cartelas_event").upsert({
+      id: 1,
+      event_name: "",
+      total_cards: 0,
+      is_active: false,
+      updated_at: new Date().toISOString(),
+    });
+    try {
+      localStorage.removeItem("control_cartelas_state");
+      localStorage.removeItem("control_cartelas_drawn");
+      localStorage.setItem("control_cartelas_module", "0");
+    } catch { /* noop */ }
+    setCartelaDrawn([]);
+    cartelaDrawnInitial.current = [];
+    setCartelasModuleActive(false);
+    setCartelasResetKey((k) => k + 1);
+
     await fetchData();
-    toast({ title: "Picks resetadas e jogos fechados! Jogadores mantidos." });
+    toast({ title: "Tudo resetado (incluindo cartelas)! Jogadores mantidos." });
   };
 
   if (!isAuthenticated) {
