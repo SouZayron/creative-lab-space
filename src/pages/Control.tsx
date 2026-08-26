@@ -7,6 +7,7 @@ import { useRealtimeTables } from "@/hooks/useRealtimeTables";
 import { GAME_NAMES, GAME_ICONS, getGameItems, isItemGame, getPowerIconUrl } from "@/data/gameData";
 import { Lock, Power, PowerOff, UserCheck, Trash2, Users, RefreshCw, Bomb, LayoutGrid } from "lucide-react";
 import { BingoDrawPanel } from "@/components/BingoDrawPanel";
+import { CartelaWinnersPanel } from "@/components/CartelaWinnersPanel";
 import { BombaAdminPanel } from "@/components/BombaAdminPanel";
 import { CartelasPanel } from "@/components/CartelasPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -59,6 +60,7 @@ export const Control = () => {
   const [picks, setPicks] = useState<GamePick[]>([]);
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
   const [cartelasModuleActive, setCartelasModuleActive] = useState(false);
+  const [cartelaDrawn, setCartelaDrawn] = useState<string[]>([]);
   const { toast } = useToast();
 
 
