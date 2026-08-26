@@ -62,10 +62,11 @@ interface Props {
   players: DrawPlayer[];
   picks: DrawPick[];
   onDrawnChange?: (drawn: string[]) => void;
+  initialDrawn?: string[];
 }
 
-export const BingoDrawPanel = ({ activeRoom, players, picks, onDrawnChange }: Props) => {
-  const [drawnItems, setDrawnItems] = useState<string[]>([]);
+export const BingoDrawPanel = ({ activeRoom, players, picks, onDrawnChange, initialDrawn }: Props) => {
+  const [drawnItems, setDrawnItems] = useState<string[]>(() => initialDrawn ?? []);
   const [currentItem, setCurrentItem] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);

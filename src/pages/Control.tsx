@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,8 +59,21 @@ export const Control = () => {
   const [players, setPlayers] = useState<GamePlayer[]>([]);
   const [picks, setPicks] = useState<GamePick[]>([]);
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
-  const [cartelasModuleActive, setCartelasModuleActive] = useState(false);
-  const [cartelaDrawn, setCartelaDrawn] = useState<string[]>([]);
+  const [cartelasModuleActive, setCartelasModuleActive] = useState<boolean>(() => {
+    try { return localStorage.getItem("control_cartelas_module") === "1"; } catch { return false; }
+  });
+  const [cartelaDrawn, setCartelaDrawn] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem("control_cartelas_drawn") || "[]"); } catch { return []; }
+  });
+  const cartelaDrawnInitial = useRef<string[]>(cartelaDrawn);
+
+  useEffect(() => {
+    try { localStorage.setItem("control_cartelas_module", cartelasModuleActive ? "1" : "0"); } catch { /* noop */ }
+  }, [cartelasModuleActive]);
+
+  useEffect(() => {
+    try { localStorage.setItem("control_cartelas_drawn", JSON.stringify(cartelaDrawn)); } catch { /* noop */ }
+  }, [cartelaDrawn]);
   const { toast } = useToast();
 
 
@@ -450,6 +463,7 @@ export const Control = () => {
                       players={[]}
                       picks={[]}
                       onDrawnChange={setCartelaDrawn}
+                      initialDrawn={cartelaDrawnInitial.current}
                     />
                   </div>
                   <div className="min-h-0">

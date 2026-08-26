@@ -1,4 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const LS_KEY = "control_cartelas_state";
+const loadState = () => {
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || "{}"); } catch { return {}; }
+};
+const persisted = loadState();
 import { GlassCard } from "@/components/GlassCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,18 +59,27 @@ interface CartelasPanelProps {
 }
 
 export function CartelasPanel({ moduleActive = false, onToggleModule }: CartelasPanelProps) {
-  const [eventName, setEventName] = useState("");
-  const [title, setTitle] = useState("Bingo LabXat");
-  const [subtitle, setSubtitle] = useState("Boa sorte!");
-  const [quantity, setQuantity] = useState(1);
-  const [selectedTheme, setSelectedTheme] = useState<ThemeKey>("purple");
-  const [generatedCards, setGeneratedCards] = useState<GeneratedCard[]>([]);
+  const [eventName, setEventName] = useState<string>(persisted.eventName ?? "");
+  const [title, setTitle] = useState<string>(persisted.title ?? "Bingo LabXat");
+  const [subtitle, setSubtitle] = useState<string>(persisted.subtitle ?? "Boa sorte!");
+  const [quantity, setQuantity] = useState<number>(persisted.quantity ?? 1);
+  const [selectedTheme, setSelectedTheme] = useState<ThemeKey>(persisted.selectedTheme ?? "purple");
+  const [generatedCards, setGeneratedCards] = useState<GeneratedCard[]>(persisted.generatedCards ?? []);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [shortLinks, setShortLinks] = useState<Record<string, string>>({});
+  const [shortLinks, setShortLinks] = useState<Record<string, string>>(persisted.shortLinks ?? {});
   const [shorteningId, setShorteningId] = useState<string | null>(null);
   const [isShorteningAll, setIsShorteningAll] = useState(false);
-  const [playerDrafts, setPlayerDrafts] = useState<Record<string, string>>({});
+  const [playerDrafts, setPlayerDrafts] = useState<Record<string, string>>(persisted.playerDrafts ?? {});
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        LS_KEY,
+        JSON.stringify({ eventName, title, subtitle, quantity, selectedTheme, generatedCards, shortLinks, playerDrafts })
+      );
+    } catch { /* noop */ }
+  }, [eventName, title, subtitle, quantity, selectedTheme, generatedCards, shortLinks, playerDrafts]);
   const [savingPlayerId, setSavingPlayerId] = useState<string | null>(null);
 
   const savePlayerName = async (card: GeneratedCard) => {
