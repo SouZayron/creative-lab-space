@@ -61,9 +61,10 @@ interface Props {
   activeRoom: DrawRoom | null;
   players: DrawPlayer[];
   picks: DrawPick[];
+  onDrawnChange?: (drawn: string[]) => void;
 }
 
-export const BingoDrawPanel = ({ activeRoom, players, picks }: Props) => {
+export const BingoDrawPanel = ({ activeRoom, players, picks, onDrawnChange }: Props) => {
   const [drawnItems, setDrawnItems] = useState<string[]>([]);
   const [currentItem, setCurrentItem] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -76,7 +77,7 @@ export const BingoDrawPanel = ({ activeRoom, players, picks }: Props) => {
   const audioRef = useRef(true);
   const { toast } = useToast();
 
-  useEffect(() => { drawnRef.current = drawnItems; }, [drawnItems]);
+  useEffect(() => { drawnRef.current = drawnItems; onDrawnChange?.(drawnItems); }, [drawnItems, onDrawnChange]);
   useEffect(() => { audioRef.current = audioEnabled; }, [audioEnabled]);
 
   const copyText = useCallback(async (text: string) => {
