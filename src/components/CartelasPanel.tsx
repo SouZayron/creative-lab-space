@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 
 const LS_KEY = "control_cartelas_state";
-const loadState = () => {
+const loadState = (): Record<string, unknown> => {
   try { return JSON.parse(localStorage.getItem(LS_KEY) || "{}"); } catch { return {}; }
 };
-const persisted = loadState();
 import { GlassCard } from "@/components/GlassCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,18 +58,18 @@ interface CartelasPanelProps {
 }
 
 export function CartelasPanel({ moduleActive = false, onToggleModule }: CartelasPanelProps) {
-  const [eventName, setEventName] = useState<string>(persisted.eventName ?? "");
-  const [title, setTitle] = useState<string>(persisted.title ?? "Bingo LabXat");
-  const [subtitle, setSubtitle] = useState<string>(persisted.subtitle ?? "Boa sorte!");
-  const [quantity, setQuantity] = useState<number>(persisted.quantity ?? 1);
-  const [selectedTheme, setSelectedTheme] = useState<ThemeKey>(persisted.selectedTheme ?? "purple");
-  const [generatedCards, setGeneratedCards] = useState<GeneratedCard[]>(persisted.generatedCards ?? []);
+  const [eventName, setEventName] = useState<string>(() => (loadState().eventName as string) ?? "");
+  const [title, setTitle] = useState<string>(() => (loadState().title as string) ?? "Bingo LabXat");
+  const [subtitle, setSubtitle] = useState<string>(() => (loadState().subtitle as string) ?? "Boa sorte!");
+  const [quantity, setQuantity] = useState<number>(() => (loadState().quantity as number) ?? 1);
+  const [selectedTheme, setSelectedTheme] = useState<ThemeKey>(() => (loadState().selectedTheme as ThemeKey) ?? "purple");
+  const [generatedCards, setGeneratedCards] = useState<GeneratedCard[]>(() => (loadState().generatedCards as GeneratedCard[]) ?? []);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [shortLinks, setShortLinks] = useState<Record<string, string>>(persisted.shortLinks ?? {});
+  const [shortLinks, setShortLinks] = useState<Record<string, string>>(() => (loadState().shortLinks as Record<string, string>) ?? {});
   const [shorteningId, setShorteningId] = useState<string | null>(null);
   const [isShorteningAll, setIsShorteningAll] = useState(false);
-  const [playerDrafts, setPlayerDrafts] = useState<Record<string, string>>(persisted.playerDrafts ?? {});
+  const [playerDrafts, setPlayerDrafts] = useState<Record<string, string>>(() => (loadState().playerDrafts as Record<string, string>) ?? {});
 
   useEffect(() => {
     try {
