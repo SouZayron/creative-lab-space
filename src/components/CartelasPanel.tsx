@@ -376,11 +376,24 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-foreground truncate">{card.title}</p>
                       <p className="text-xs text-muted-foreground truncate">
-                        {card.userName} • {theme.name}
+                        {shortLinks[card.id] || `${card.userName} • ${theme.name}`}
                       </p>
                     </div>
                   </div>
                   <div className="flex gap-2 shrink-0">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleShorten(card)}
+                      disabled={shorteningId === card.id}
+                      title="Gerar link encurtado"
+                    >
+                      {shorteningId === card.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Scissors className={cn("w-4 h-4", shortLinks[card.id] && "text-green-500")} />
+                      )}
+                    </Button>
                     <Button variant="outline" size="sm" onClick={() => copyLink(card)}>
                       {copiedId === card.id ? (
                         <Check className="w-4 h-4 text-green-500" />
