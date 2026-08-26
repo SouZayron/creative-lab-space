@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.generate-blog-post]
 verify_jwt = false
+
+[functions.shorten-link]
+verify_jwt = false

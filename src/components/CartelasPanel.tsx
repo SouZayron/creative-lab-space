@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { LayoutGrid, Shuffle, Link2, Copy, Check, Loader2, Palette, Power, PowerOff } from "lucide-react";
+import { LayoutGrid, Shuffle, Link2, Copy, Check, Loader2, Palette, Power, PowerOff, Scissors } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -59,6 +59,57 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
   const [generatedCards, setGeneratedCards] = useState<GeneratedCard[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [shortLinks, setShortLinks] = useState<Record<string, string>>({});
+  const [shorteningId, setShorteningId] = useState<string | null>(null);
+  const [isShorteningAll, setIsShorteningAll] = useState(false);
+
+  const fullLink = (card: GeneratedCard) =>
+    `${window.location.origin}${getCardPath(card.userName, card.cardNumber)}`;
+
+  const shortenUrl = async (url: string): Promise<string | null> => {
+    const { data, error } = await supabase.functions.invoke("shorten-link", { body: { url } });
+    if (error || !data?.shortUrl) {
+      console.error("shorten-link error", error, data);
+      return null;
+    }
+    return data.shortUrl as string;
+  };
+
+  const handleShorten = async (card: GeneratedCard) => {
+    if (shortLinks[card.id]) {
+      await navigator.clipboard.writeText(shortLinks[card.id]);
+      toast.success("Link curto copiado!");
+      return;
+    }
+    setShorteningId(card.id);
+    const short = await shortenUrl(fullLink(card));
+    setShorteningId(null);
+    if (!short) {
+      toast.error("Não foi possível encurtar o link");
+      return;
+    }
+    setShortLinks((prev) => ({ ...prev, [card.id]: short }));
+    await navigator.clipboard.writeText(short);
+    toast.success("Link curto gerado e copiado!");
+  };
+
+  const handleShortenAll = async () => {
+    if (generatedCards.length === 0) return;
+    setIsShorteningAll(true);
+    const result: Record<string, string> = { ...shortLinks };
+    for (const card of generatedCards) {
+      if (result[card.id]) continue;
+      const short = await shortenUrl(fullLink(card));
+      if (short) result[card.id] = short;
+    }
+    setShortLinks(result);
+    setIsShorteningAll(false);
+    const lines = generatedCards
+      .map((c) => `#${c.cardNumber}: ${result[c.id] || fullLink(c)}`)
+      .join("\n");
+    await navigator.clipboard.writeText(lines);
+    toast.success("Links curtos gerados e copiados!");
+  };
 
   const handleGenerate = async () => {
     if (!eventName.trim()) {
@@ -93,6 +144,7 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
         return;
       }
 
+      setShortLinks({});
       setGeneratedCards(
         (data || []).map((card) => ({
           id: card.id,
@@ -114,7 +166,7 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
   };
 
   const copyLink = async (card: GeneratedCard) => {
-    await navigator.clipboard.writeText(`${window.location.origin}${getCardPath(card.userName, card.cardNumber)}`);
+    await navigator.clipboard.writeText(shortLinks[card.id] || fullLink(card));
     setCopiedId(card.id);
     toast.success("Link copiado!");
     setTimeout(() => setCopiedId(null), 2000);
@@ -122,7 +174,7 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
 
   const copyAllLinks = async () => {
     const all = generatedCards
-      .map((c) => `#${c.cardNumber}: ${window.location.origin}${getCardPath(c.userName, c.cardNumber)}`)
+      .map((c) => `#${c.cardNumber}: ${shortLinks[c.id] || fullLink(c)}`)
       .join("\n");
     await navigator.clipboard.writeText(all);
     toast.success("Todos os links copiados!");
@@ -284,10 +336,20 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
             Cartelas Geradas ({generatedCards.length})
           </h2>
           {generatedCards.length > 0 && (
-            <Button size="sm" variant="outline" onClick={copyAllLinks}>
-              <Copy className="w-4 h-4 mr-2" />
-              Copiar todos
-            </Button>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={handleShortenAll} disabled={isShorteningAll}>
+                {isShorteningAll ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Scissors className="w-4 h-4 mr-2" />
+                )}
+                Encurtar todos
+              </Button>
+              <Button size="sm" variant="outline" onClick={copyAllLinks}>
+                <Copy className="w-4 h-4 mr-2" />
+                Copiar todos
+              </Button>
+            </div>
           )}
         </div>
 
@@ -314,11 +376,24 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-foreground truncate">{card.title}</p>
                       <p className="text-xs text-muted-foreground truncate">
-                        {card.userName} • {theme.name}
+                        {shortLinks[card.id] || `${card.userName} • ${theme.name}`}
                       </p>
                     </div>
                   </div>
                   <div className="flex gap-2 shrink-0">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleShorten(card)}
+                      disabled={shorteningId === card.id}
+                      title="Gerar link encurtado"
+                    >
+                      {shorteningId === card.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Scissors className={cn("w-4 h-4", shortLinks[card.id] && "text-green-500")} />
+                      )}
+                    </Button>
                     <Button variant="outline" size="sm" onClick={() => copyLink(card)}>
                       {copiedId === card.id ? (
                         <Check className="w-4 h-4 text-green-500" />
