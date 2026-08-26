@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useRealtimeTables } from "@/hooks/useRealtimeTables";
 import { GAME_NAMES, GAME_ICONS, getGameItems, isItemGame, getPowerIconUrl } from "@/data/gameData";
-import { Lock, Power, PowerOff, UserCheck, Trash2, Users, RefreshCw, Bomb } from "lucide-react";
+import { Lock, Power, PowerOff, UserCheck, Trash2, Users, RefreshCw, Bomb, LayoutGrid } from "lucide-react";
 import { BingoDrawPanel } from "@/components/BingoDrawPanel";
 import { BombaAdminPanel } from "@/components/BombaAdminPanel";
+import { CartelasPanel } from "@/components/CartelasPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
