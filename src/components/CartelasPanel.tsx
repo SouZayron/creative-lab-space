@@ -65,6 +65,7 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
   const [selectedTheme, setSelectedTheme] = useState<ThemeKey>(() => (loadState().selectedTheme as ThemeKey) ?? "purple");
   const [generatedCards, setGeneratedCards] = useState<GeneratedCard[]>(() => (loadState().generatedCards as GeneratedCard[]) ?? []);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [copiedNumbersId, setCopiedNumbersId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [shortLinks, setShortLinks] = useState<Record<string, string>>(() => (loadState().shortLinks as Record<string, string>) ?? {});
   const [shorteningId, setShorteningId] = useState<string | null>(null);
