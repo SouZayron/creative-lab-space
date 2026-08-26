@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useRealtimeTables } from "@/hooks/useRealtimeTables";
 import { GAME_NAMES, GAME_ICONS, GAME_ITEM_LABEL, getGameItems, isItemGame, getPowerIconUrl } from "@/data/gameData";
 import { BombaPlayerPanel } from "@/components/BombaPlayerPanel";
+import { CartelaClaimPanel } from "@/components/CartelaClaimPanel";
 import { Copy, Check, Clock, Gamepad2, LogIn } from "lucide-react";
 
 
@@ -37,6 +38,7 @@ export const Games = () => {
   const [picks, setPicks] = useState<GamePick[]>([]);
   const [allPlayers, setAllPlayers] = useState<GamePlayer[]>([]);
   const [bombaState, setBombaState] = useState<{ is_open: boolean; status: string } | null>(null);
+  const [cartelasEvent, setCartelasEvent] = useState<{ event_name: string; is_active: boolean } | null>(null);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [pickDialogOpen, setPickDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -75,6 +77,13 @@ export const Games = () => {
       .eq("id", 1)
       .maybeSingle();
     setBombaState(bombaData as { is_open: boolean; status: string } | null);
+
+    const { data: cartelasData } = await supabase
+      .from("cartelas_event")
+      .select("event_name, is_active")
+      .eq("id", 1)
+      .maybeSingle();
+    setCartelasEvent(cartelasData as { event_name: string; is_active: boolean } | null);
 
     const savedId = localStorage.getItem("game_player_id");
     if (savedId) {
@@ -280,6 +289,15 @@ export const Games = () => {
           </p>
         </div>
       </div>
+    );
+  }
+
+  if (cartelasEvent?.is_active && cartelasEvent.event_name) {
+    return (
+      <CartelaClaimPanel
+        eventName={cartelasEvent.event_name}
+        defaultPlayerName={currentPlayer.name}
+      />
     );
   }
 

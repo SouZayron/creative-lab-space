@@ -81,6 +81,41 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
   }, [eventName, title, subtitle, quantity, selectedTheme, generatedCards, shortLinks, playerDrafts]);
   const [savingPlayerId, setSavingPlayerId] = useState<string | null>(null);
 
+  const activeEventUser = generatedCards[0]?.userName || "";
+
+  // publica o evento ativo para a página /games
+  useEffect(() => {
+    supabase
+      .from("cartelas_event")
+      .upsert({
+        id: 1,
+        event_name: activeEventUser,
+        total_cards: generatedCards.length,
+        is_active: moduleActive && generatedCards.length > 0,
+        updated_at: new Date().toISOString(),
+      })
+      .then(({ error }) => { if (error) console.error("cartelas_event sync", error); });
+  }, [moduleActive, activeEventUser, generatedCards.length]);
+
+  // sincroniza jogadores que reservaram cartela pelo /games
+  useEffect(() => {
+    if (!activeEventUser) return;
+    const sync = async () => {
+      const { data } = await supabase
+        .from("bingo_cards")
+        .select("id, player_name")
+        .eq("user_name", activeEventUser);
+      if (!data) return;
+      const map = new Map(data.map((d) => [d.id, (d as { player_name?: string | null }).player_name || ""]));
+      setGeneratedCards((prev) =>
+        prev.map((c) => (map.has(c.id) ? { ...c, playerName: map.get(c.id) as string } : c))
+      );
+    };
+    sync();
+    const t = window.setInterval(sync, 10000);
+    return () => window.clearInterval(t);
+  }, [activeEventUser]);
+
   const savePlayerName = async (card: GeneratedCard) => {
     const name = (playerDrafts[card.id] ?? card.playerName).trim().slice(0, 40);
     setSavingPlayerId(card.id);
