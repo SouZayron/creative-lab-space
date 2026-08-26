@@ -103,8 +103,9 @@ export const Games = () => {
 
   useRealtimeTables({
     channelName: "games-page-realtime",
+    fallbackMs: 1500,
     onSync: fetchData,
-    tables: ["game_rooms", "game_picks", "game_players", "bomba_state"],
+    tables: ["game_rooms", "game_picks", "game_players", "bomba_state", "bomba_picks", "cartelas_event", "bingo_cards"],
   });
 
 
