@@ -19,7 +19,63 @@ Deno.serve(async (req) => {
       });
     }
 
-    // 1) TinyURL (free, no key)
+    const UA = { "User-Agent": "Mozilla/5.0 (compatible; LabXatBot/1.0)" };
+
+    // 1) is.gd (free, no key, no ads, direct redirect)
+    try {
+      const res = await fetch(
+        `https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`,
+        { headers: UA }
+      );
+      const text = await res.text();
+      const data = JSON.parse(text);
+      if (data?.shorturl) {
+        return new Response(JSON.stringify({ shortUrl: data.shorturl }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      console.log("is.gd failed", res.status, text);
+    } catch (e) {
+      console.log("is.gd error", String(e));
+    }
+
+    // 2) v.gd fallback (same provider, also ad-free)
+    try {
+      const res = await fetch(
+        `https://v.gd/create.php?format=json&url=${encodeURIComponent(url)}`,
+        { headers: UA }
+      );
+      const text = await res.text();
+      const data = JSON.parse(text);
+      if (data?.shorturl) {
+        return new Response(JSON.stringify({ shortUrl: data.shorturl }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      console.log("v.gd failed", res.status, text);
+    } catch (e) {
+      console.log("v.gd error", String(e));
+    }
+
+    // 3) spoo.me fallback (free, no key, no ads)
+    try {
+      const res = await fetch("https://spoo.me/", {
+        method: "POST",
+        headers: { ...UA, Accept: "application/json", "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ url }).toString(),
+      });
+      const data = await res.json();
+      if (data?.short_url) {
+        return new Response(JSON.stringify({ shortUrl: String(data.short_url).replace(/^http:/, "https:") }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    } catch (e) {
+      console.log("spoo.me error", String(e));
+    }
+
+
+    // 3) TinyURL last resort
     try {
       const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`);
       const text = (await res.text()).trim();
@@ -32,20 +88,6 @@ Deno.serve(async (req) => {
       // fall through
     }
 
-    // 2) is.gd fallback
-    try {
-      const res = await fetch(
-        `https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`
-      );
-      const data = await res.json();
-      if (data?.shorturl) {
-        return new Response(JSON.stringify({ shortUrl: data.shorturl }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-    } catch (_) {
-      // fall through
-    }
 
     return new Response(JSON.stringify({ error: "Não foi possível encurtar o link" }), {
       status: 502,
