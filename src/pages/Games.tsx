@@ -432,7 +432,40 @@ export const Games = () => {
           </div>
         )}
       </div>
+
+      <Dialog open={pickDialogOpen && myPicks.length > 0} onOpenChange={setPickDialogOpen}>
+        <DialogContent className="max-w-sm border-purple-400/30 bg-background/80 backdrop-blur-xl">
+          <DialogHeader>
+            <DialogTitle className="text-center text-lg bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              {gameIcon} {gameName}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Jogador: <span className="font-semibold text-purple-400">{currentPlayer.name}</span>
+            </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {myPicks.map((p) => (
+                <span
+                  key={p.id}
+                  className="rounded-lg border border-purple-300/30 bg-white/10 px-3 py-2 text-base font-bold text-foreground"
+                >
+                  {p.pick_value}
+                </span>
+              ))}
+            </div>
+            <Button
+              onClick={handleCopyAnimalsCombo}
+              className={`w-full ${copiedKey === 'combo' ? 'bg-green-500 hover:bg-green-500' : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90'}`}
+            >
+              {copiedKey === 'combo' ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+              {copiedKey === 'combo' ? 'Copiado!' : 'Copiar'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
+
   );
 };
 
