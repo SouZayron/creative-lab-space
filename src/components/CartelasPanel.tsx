@@ -147,6 +147,7 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
       }
 
       setShortLinks({});
+      setPlayerDrafts({});
       setGeneratedCards(
         (data || []).map((card) => ({
           id: card.id,
@@ -156,8 +157,10 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
           title: card.title,
           subtitle: card.subtitle,
           theme: card.theme,
+          playerName: (card as { player_name?: string | null }).player_name || "",
         }))
       );
+
       toast.success(`${quantity} cartela${quantity > 1 ? "s" : ""} gerada${quantity > 1 ? "s" : ""}!`);
     } catch (err) {
       console.error("Error generating cards:", err);
