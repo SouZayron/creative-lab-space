@@ -441,13 +441,20 @@ export const Control = () => {
           <TabsContent value="roletas" className="mt-6 h-[calc(100vh-190px)] min-h-0">
             <div className="h-full flex flex-col min-h-0 backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-4 shadow-xl">
               {cartelasModuleActive ? (
-                <div className="flex-1 min-h-0">
-                  <BingoDrawPanel
-                    activeRoom={{ id: "cartelas-module", game_type: "cartelas", is_open: true }}
-                    players={[]}
-                    picks={[]}
-                  />
+                <div className="flex-1 min-h-0 grid grid-cols-1 xl:grid-cols-[1fr_340px] gap-4">
+                  <div className="min-h-0">
+                    <BingoDrawPanel
+                      activeRoom={{ id: "cartelas-module", game_type: "cartelas", is_open: true }}
+                      players={[]}
+                      picks={[]}
+                      onDrawnChange={setCartelaDrawn}
+                    />
+                  </div>
+                  <div className="min-h-0">
+                    <CartelaWinnersPanel drawn={cartelaDrawn} />
+                  </div>
                 </div>
+
               ) : activeRoom ? (
                 <div className="flex-1 min-h-0">
                   <BingoDrawPanel activeRoom={activeRoom} players={players} picks={picks} />
