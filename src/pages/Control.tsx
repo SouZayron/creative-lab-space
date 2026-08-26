@@ -229,7 +229,11 @@ export const Control = () => {
             <TabsTrigger value="bomba" className="flex-1">
               <Bomb className="w-4 h-4 mr-1.5 text-orange-400" /> Bomba
             </TabsTrigger>
+            <TabsTrigger value="cartelas" className="flex-1">
+              <LayoutGrid className="w-4 h-4 mr-1.5 text-zgames-purple" /> Cartelas
+            </TabsTrigger>
           </TabsList>
+
 
 
           {/* ===== CADASTROS ===== */}
