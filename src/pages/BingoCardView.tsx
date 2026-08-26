@@ -18,6 +18,7 @@ interface CardData {
   cardNumber: number;
   markedNumbers: number[];
   theme: ThemeKey;
+  playerName?: string | null;
 }
 
 export function BingoCardView() {
@@ -75,6 +76,7 @@ export function BingoCardView() {
         cardNumber: data.card_number,
         markedNumbers: data.marked_numbers || [],
         theme: (data.theme as ThemeKey) || "purple",
+        playerName: (data as { player_name?: string | null }).player_name ?? null,
       });
 
       setMarkedNumbers(new Set(data.marked_numbers || []));
@@ -215,6 +217,13 @@ export function BingoCardView() {
           
           {/* Subtitle */}
           <p className="text-muted-foreground mt-2 text-lg">{cardData.subtitle}</p>
+          {cardData.playerName && (
+            <div className="mt-3 flex justify-center">
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/15 px-4 py-1.5 text-base font-bold text-primary">
+                {cardData.playerName}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Bingo Card Grid */}
