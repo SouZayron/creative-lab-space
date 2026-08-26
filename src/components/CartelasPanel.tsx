@@ -59,6 +59,57 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
   const [generatedCards, setGeneratedCards] = useState<GeneratedCard[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [shortLinks, setShortLinks] = useState<Record<string, string>>({});
+  const [shorteningId, setShorteningId] = useState<string | null>(null);
+  const [isShorteningAll, setIsShorteningAll] = useState(false);
+
+  const fullLink = (card: GeneratedCard) =>
+    `${window.location.origin}${getCardPath(card.userName, card.cardNumber)}`;
+
+  const shortenUrl = async (url: string): Promise<string | null> => {
+    const { data, error } = await supabase.functions.invoke("shorten-link", { body: { url } });
+    if (error || !data?.shortUrl) {
+      console.error("shorten-link error", error, data);
+      return null;
+    }
+    return data.shortUrl as string;
+  };
+
+  const handleShorten = async (card: GeneratedCard) => {
+    if (shortLinks[card.id]) {
+      await navigator.clipboard.writeText(shortLinks[card.id]);
+      toast.success("Link curto copiado!");
+      return;
+    }
+    setShorteningId(card.id);
+    const short = await shortenUrl(fullLink(card));
+    setShorteningId(null);
+    if (!short) {
+      toast.error("Não foi possível encurtar o link");
+      return;
+    }
+    setShortLinks((prev) => ({ ...prev, [card.id]: short }));
+    await navigator.clipboard.writeText(short);
+    toast.success("Link curto gerado e copiado!");
+  };
+
+  const handleShortenAll = async () => {
+    if (generatedCards.length === 0) return;
+    setIsShorteningAll(true);
+    const result: Record<string, string> = { ...shortLinks };
+    for (const card of generatedCards) {
+      if (result[card.id]) continue;
+      const short = await shortenUrl(fullLink(card));
+      if (short) result[card.id] = short;
+    }
+    setShortLinks(result);
+    setIsShorteningAll(false);
+    const lines = generatedCards
+      .map((c) => `#${c.cardNumber}: ${result[c.id] || fullLink(c)}`)
+      .join("\n");
+    await navigator.clipboard.writeText(lines);
+    toast.success("Links curtos gerados e copiados!");
+  };
 
   const handleGenerate = async () => {
     if (!eventName.trim()) {
