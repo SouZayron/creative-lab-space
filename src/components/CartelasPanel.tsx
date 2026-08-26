@@ -144,6 +144,7 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
         return;
       }
 
+      setShortLinks({});
       setGeneratedCards(
         (data || []).map((card) => ({
           id: card.id,
@@ -165,7 +166,7 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
   };
 
   const copyLink = async (card: GeneratedCard) => {
-    await navigator.clipboard.writeText(`${window.location.origin}${getCardPath(card.userName, card.cardNumber)}`);
+    await navigator.clipboard.writeText(shortLinks[card.id] || fullLink(card));
     setCopiedId(card.id);
     toast.success("Link copiado!");
     setTimeout(() => setCopiedId(null), 2000);
@@ -173,7 +174,7 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
 
   const copyAllLinks = async () => {
     const all = generatedCards
-      .map((c) => `#${c.cardNumber}: ${window.location.origin}${getCardPath(c.userName, c.cardNumber)}`)
+      .map((c) => `#${c.cardNumber}: ${shortLinks[c.id] || fullLink(c)}`)
       .join("\n");
     await navigator.clipboard.writeText(all);
     toast.success("Todos os links copiados!");
