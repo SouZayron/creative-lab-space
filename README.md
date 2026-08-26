@@ -1,73 +1,122 @@
-# Welcome to your Lovable project
+# Creative Lab Space
 
-## Project info
+Crie um site one page moderno, criativo e tecnológico, inspirado em glassmorphism, gradientes suaves animados e elementos flutuantes em blur, semelhante a apresentações visuais modernas com blobs coloridos em 3D.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+Estrutura geral
 
-## How can I edit this code?
+Site one page
 
-There are several ways of editing your application.
+Visual clean, futurista e interativo
 
-**Use Lovable**
+Fundo claro com gradiente animado em tons pastel (azul, roxo, rosa, verde)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+Elementos com blur, transparência e profundidade
 
-Changes made via Lovable will be committed automatically to this repo.
+Animações suaves (fade, float, hover)
 
-**Use your preferred IDE**
+Hero Section (Seção principal)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Conteúdo centralizado vertical e horizontalmente
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Nome principal em destaque:
 
-Follow these steps:
+Labxat
+
+Fonte grande, bold, moderna (sans-serif)
+
+Slogan logo abaixo:
+
+“Experimente. Crie. Evolua.”
+
+Fonte leve, espaçamento elegante
+
+Card central com:
+
+Fundo glassmorphism (transparente + blur)
+
+Bordas arredondadas
+
+Leve sombra suave
+
+Blobs coloridos desfocados animados flutuando ao redor do hero
+
+Seção de Ferramentas (logo abaixo do Hero)
+
+Layout em grid horizontal
+
+Botões em formato:
+
+Retangular
+
+Bordas bem arredondadas
+
+Altura média, visual premium
+
+Cada botão com:
+
+Fundo em gradiente animado
+
+Efeito de vídeo desfocado / blur em movimento
+
+Hover com:
+
+Glow suave
+
+Leve zoom
+
+Aumento de brilho
+
+Texto centralizado nos botões, cor branca
+
+Botões:
+
+Nicks Personalizados
+
+Gerador de Cores
+
+Bingo 1–90
+
+Estilo visual
+
+Paleta: azul claro, lilás, rosa, verde água
+
+Fundo com gradiente fluido animado
+
+Tipografia moderna (ex: Inter, Poppins ou similar)
+
+Interface amigável, criativa e experimental
+
+Sensação de laboratório criativo digital
+
+Extras desejáveis
+
+Micro animações em scroll
+
+Elementos circulares flutuando lentamente
+
+Transições suaves entre seções
+
+Totalmente responsivo (desktop e mobile)
+
+This project was built with [Lovable](https://lovable.dev).
+
+**Live app**: https://blur-craft-nexus.lovable.app
+
+## Build with Lovable
+
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/79e3ab8d-a567-4f17-99e1-754404aab894).
+
+- **Ship faster**: describe what you want to build and Lovable handles the code.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+
+## Development
+
+Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
+git clone <this-repository-url>
+cd <repository-name>
 npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
