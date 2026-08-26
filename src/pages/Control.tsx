@@ -58,6 +58,7 @@ export const Control = () => {
   const [players, setPlayers] = useState<GamePlayer[]>([]);
   const [picks, setPicks] = useState<GamePick[]>([]);
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+  const [cartelasModuleActive, setCartelasModuleActive] = useState(false);
   const { toast } = useToast();
 
 
@@ -439,7 +440,15 @@ export const Control = () => {
           {/* ===== ROLETAS ===== */}
           <TabsContent value="roletas" className="mt-6 h-[calc(100vh-190px)] min-h-0">
             <div className="h-full flex flex-col min-h-0 backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-4 shadow-xl">
-              {activeRoom ? (
+              {cartelasModuleActive ? (
+                <div className="flex-1 min-h-0">
+                  <BingoDrawPanel
+                    activeRoom={{ id: "cartelas-module", game_type: "cartelas", is_open: true }}
+                    players={[]}
+                    picks={[]}
+                  />
+                </div>
+              ) : activeRoom ? (
                 <div className="flex-1 min-h-0">
                   <BingoDrawPanel activeRoom={activeRoom} players={players} picks={picks} />
                 </div>
@@ -463,7 +472,13 @@ export const Control = () => {
 
           {/* ===== CARTELAS ===== */}
           <TabsContent value="cartelas" className="mt-6 h-[calc(100vh-190px)] min-h-0">
-            <CartelasPanel />
+            <CartelasPanel
+              moduleActive={cartelasModuleActive}
+              onToggleModule={(active) => {
+                setCartelasModuleActive(active);
+                toast({ title: active ? "Módulo de cartelas ativado! Roleta 1 a 90 disponível." : "Módulo de cartelas desativado." });
+              }}
+            />
           </TabsContent>
         </Tabs>
 

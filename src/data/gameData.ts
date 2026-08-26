@@ -450,12 +450,14 @@ export const SINGERS = [
 ];
 
 Object.assign(GAME_NAMES, {
+  cartelas: "Bingo de Cartelas (1 a 90)",
   foods: "Jogo das Comidas",
   snacks: "Jogo dos Snacks",
   singers: "Jogo dos Cantores e Bandas",
 });
 
 Object.assign(GAME_ICONS, {
+  cartelas: "🎟️",
   foods: "🍲",
   snacks: "🍿",
   singers: "🎤",

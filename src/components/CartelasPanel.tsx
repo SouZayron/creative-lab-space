@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { LayoutGrid, Shuffle, Link2, Copy, Check, Loader2, Palette } from "lucide-react";
+import { LayoutGrid, Shuffle, Link2, Copy, Check, Loader2, Palette, Power, PowerOff } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -45,7 +45,12 @@ function getCardPath(userName: string, cardNumber: number): string {
   return `/bingo/cartela/${normalizeUserName(userName)}/${cardNumber}`;
 }
 
-export function CartelasPanel() {
+interface CartelasPanelProps {
+  moduleActive?: boolean;
+  onToggleModule?: (active: boolean) => void;
+}
+
+export function CartelasPanel({ moduleActive = false, onToggleModule }: CartelasPanelProps) {
   const [eventName, setEventName] = useState("");
   const [title, setTitle] = useState("Bingo ZGames");
   const [subtitle, setSubtitle] = useState("Boa sorte!");
@@ -127,6 +132,47 @@ export function CartelasPanel() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full min-h-0">
       <GlassCard className="p-6 overflow-y-auto">
         <div className="grid gap-6">
+          <div className={cn(
+            "flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border",
+            moduleActive
+              ? "border-green-400/40 bg-green-500/10"
+              : "border-white/10 bg-white/5"
+          )}>
+            <div className="flex items-center gap-2">
+              <span className={cn(
+                "w-2.5 h-2.5 rounded-full",
+                moduleActive ? "bg-green-400 animate-pulse" : "bg-muted-foreground/40"
+              )} />
+              <div>
+                <p className="text-sm font-semibold text-foreground">
+                  Módulo de Cartelas {moduleActive ? "ativo" : "inativo"}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Ativa a roleta de 1 a 90 na aba Roletas
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={() => onToggleModule?.(!moduleActive)}
+              className={cn(
+                "text-white font-semibold",
+                moduleActive
+                  ? "bg-gradient-to-r from-red-500 to-red-600"
+                  : "bg-gradient-to-r from-green-500 to-emerald-600"
+              )}
+            >
+              {moduleActive ? (
+                <>
+                  <PowerOff className="w-4 h-4 mr-2" /> Desativar módulo
+                </>
+              ) : (
+                <>
+                  <Power className="w-4 h-4 mr-2" /> Ativar módulo
+                </>
+              )}
+            </Button>
+          </div>
+
           <div className="grid gap-2">
             <Label htmlFor="eventName" className="text-foreground">Nome do evento</Label>
             <Input
