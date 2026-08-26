@@ -92,7 +92,7 @@ const Index = () => {
     <div className="zgames-page zgames-grid-line min-h-screen overflow-x-hidden text-foreground">
       <header className="fixed inset-x-0 top-0 z-50 border-b border-border/50 bg-background/65 backdrop-blur-2xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <a href="#inicio" aria-label="ZGames - início" className="zgames-heading text-2xl font-extrabold zgames-text-gradient">ZGames</a>
+          <a href="#inicio" aria-label="LabXat - início" className="zgames-heading text-2xl font-extrabold zgames-text-gradient">LabXat</a>
           <nav className="hidden items-center gap-6 lg:flex" aria-label="Navegação principal">
             {navItems.map(([label, href]) => (
               <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined} className="text-sm font-medium text-muted-foreground transition-colors hover:text-cyan">{label}</a>
@@ -161,7 +161,7 @@ const Index = () => {
 
         <section id="jogos" className="px-4 py-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
-            <SectionHeading eyebrow="Catálogo ZGames" title="Um jogo novo para cada dinâmica" description="Painéis preparados para divertir comunidades pequenas ou grandes, com visual claro e operação simples." />
+            <SectionHeading eyebrow="Catálogo LabXat" title="Um jogo novo para cada dinâmica" description="Painéis preparados para divertir comunidades pequenas ou grandes, com visual claro e operação simples." />
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">{games.map((game, index) => <GameCard key={game.name} game={game} index={index} />)}</div>
           </div>
         </section>
@@ -169,7 +169,7 @@ const Index = () => {
         <section className="px-4 py-10 sm:px-6 lg:px-8">
           <motion.div {...reveal} className="zgames-card zgames-bomb-card mx-auto grid max-w-7xl overflow-hidden p-7 md:grid-cols-[1fr_auto] md:items-center md:p-10">
             <div className="max-w-3xl">
-              <div className="flex flex-wrap gap-2"><span className="rounded-full bg-ember/15 px-3 py-1 text-xs font-bold text-ember">MAIS JOGADO</span><span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-bold text-primary">EXCLUSIVO ZGAMES</span></div>
+              <div className="flex flex-wrap gap-2"><span className="rounded-full bg-ember/15 px-3 py-1 text-xs font-bold text-ember">MAIS JOGADO</span><span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-bold text-primary">EXCLUSIVO LABXAT</span></div>
               <h2 className="zgames-heading mt-5 text-3xl font-extrabold md:text-4xl">Jogo Bomba Atômica 💣</h2>
               <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">Cada jogador escolhe 5 números de 1 a 15. A cada rodada, uma bomba explode um número. Ganha quem sobreviver com o último número restante!</p>
               <p className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-ember"><Users className="size-4" /> Jogadores ilimitados 🔥</p>
@@ -214,16 +214,16 @@ const Index = () => {
             <Trophy className="mx-auto size-9 text-cyan" />
             <h2 className="zgames-heading mt-5 text-3xl font-extrabold md:text-5xl">Pronto para transformar sua sala?</h2>
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">Escolha seus jogos e leve uma experiência profissional para sua comunidade.</p>
-            <Button asChild size="lg" variant="neon" className="mt-8 rounded-xl zgames-pulse"><a href="https://xat.com/altavibe" target="_blank" rel="noopener noreferrer">Quero meu painel ZGames <ArrowRight /></a></Button>
+            <Button asChild size="lg" variant="neon" className="mt-8 rounded-xl zgames-pulse"><a href="https://xat.com/altavibe" target="_blank" rel="noopener noreferrer">Quero meu painel LabXat <ArrowRight /></a></Button>
           </motion.div>
         </section>
       </main>
 
       <footer className="mt-16 border-t border-border/60 bg-background/55 px-4 py-10 backdrop-blur-xl sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
-          <div><p className="zgames-heading text-2xl font-extrabold zgames-text-gradient">ZGames</p><p className="mt-2 text-xs text-muted-foreground">© 2026 ZGames. Todos os direitos reservados.</p></div>
+          <div><p className="zgames-heading text-2xl font-extrabold zgames-text-gradient">LabXat</p><p className="mt-2 text-xs text-muted-foreground">© 2026 LabXat. Todos os direitos reservados.</p></div>
           <div className="flex flex-wrap justify-center gap-5 text-xs font-medium text-muted-foreground"><Link to="/sobre" className="hover:text-cyan">Sobre</Link><Link to="/privacidade" className="hover:text-cyan">Privacidade</Link><Link to="/termos" className="hover:text-cyan">Termos</Link><a href="https://xat.com/altavibe" target="_blank" rel="noopener noreferrer" className="hover:text-cyan">Contato</a></div>
-          <a href="https://xat.com/altavibe" target="_blank" rel="noopener noreferrer" aria-label="ZGames no xat" className="grid size-10 place-items-center rounded-xl border border-border bg-card/50 text-muted-foreground transition-colors hover:text-cyan"><Instagram className="size-4" /></a>
+          <a href="https://xat.com/altavibe" target="_blank" rel="noopener noreferrer" aria-label="LabXat no xat" className="grid size-10 place-items-center rounded-xl border border-border bg-card/50 text-muted-foreground transition-colors hover:text-cyan"><Instagram className="size-4" /></a>
         </div>
       </footer>
     </div>

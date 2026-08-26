@@ -34,7 +34,7 @@ export const FloatingRadio = () => {
     <button
       onClick={togglePlay}
       type="button"
-      aria-label={isPlaying ? `${t("pauseRadio")} ZGames` : `${t("playRadio")} ZGames`}
+      aria-label={isPlaying ? `${t("pauseRadio")} LabXat` : `${t("playRadio")} LabXat`}
       aria-pressed={isPlaying}
       className={`fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg hover:scale-110 ${
         isPlaying

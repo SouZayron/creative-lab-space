@@ -105,10 +105,10 @@ const BlogPost = () => {
     image: post.cover_image_url ? [post.cover_image_url] : undefined,
     datePublished: post.published_at,
     dateModified: post.published_at,
-    author: { "@type": "Organization", name: "ZGames" },
+    author: { "@type": "Organization", name: "LabXat" },
     publisher: {
       "@type": "Organization",
-      name: "ZGames",
+      name: "LabXat",
       logo: {
         "@type": "ImageObject",
         url: "https://zgames.com/zgames-logo-64.png",
