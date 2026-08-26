@@ -1,0 +1,1 @@
+ALTER TABLE public.bingo_cards ADD COLUMN IF NOT EXISTS player_name text;
