@@ -31,7 +31,17 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
   const [selected, setSelected] = useState<CardRow | null>(null);
   const [nameInput, setNameInput] = useState(defaultPlayerName);
   const [saving, setSaving] = useState(false);
-  const [myCard, setMyCard] = useState<CardRow | null>(null);
+  const myCardKey = `cartela-claim-${eventName}`;
+  const [myCard, setMyCard] = useState<CardRow | null>(() => {
+    try {
+      const raw = localStorage.getItem(`cartela-claim-${eventName}`);
+      return raw ? (JSON.parse(raw) as CardRow) : null;
+    } catch {
+      return null;
+    }
+  });
+  // guarda o último nome conhecido de cada cartela: uma vez reservada, nunca volta a "livre"
+  const knownNames = useRef<Record<string, string>>({});
 
   const load = useCallback(async () => {
     if (!eventName) return;
@@ -46,7 +56,15 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
       console.error("load cartelas error", error);
       return;
     }
-    setCards((data as unknown as CardRow[]) || []);
+    const rows = ((data as unknown as CardRow[]) || []).map((row) => {
+      const remote = (row.player_name || "").trim();
+      if (remote) {
+        knownNames.current[row.id] = remote;
+        return { ...row, player_name: remote };
+      }
+      return { ...row, player_name: knownNames.current[row.id] || null };
+    });
+    setCards(rows);
   }, [eventName]);
 
   useRealtimeTables({
@@ -72,7 +90,7 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
       .from("bingo_cards")
       .update({ player_name: name })
       .eq("id", selected.id)
-      .is("player_name", null)
+      .or("player_name.is.null,player_name.eq.")
       .select()
       .maybeSingle();
     setSaving(false);
@@ -90,12 +108,17 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
     }
 
     const claimed = { ...selected, player_name: name };
+    knownNames.current[claimed.id] = name;
     setMyCard(claimed);
+    try {
+      localStorage.setItem(myCardKey, JSON.stringify(claimed));
+    } catch { /* noop */ }
     setSelected(null);
     load();
     toast.success(`Cartela #${claimed.card_number} é sua!`);
     window.open(cardUrl(claimed), "_blank");
   };
+
 
   return (
     <div className="zgames-page zgames-grid-line min-h-screen p-4">
