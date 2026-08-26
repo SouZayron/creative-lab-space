@@ -66,7 +66,7 @@ Deno.serve(async (req) => {
       });
       const data = await res.json();
       if (data?.short_url) {
-        return new Response(JSON.stringify({ shortUrl: data.short_url }), {
+        return new Response(JSON.stringify({ shortUrl: String(data.short_url).replace(/^http:/, "https:") }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
