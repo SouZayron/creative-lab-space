@@ -80,9 +80,21 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
 
   const claim = async () => {
     if (!selected) return;
+    if (myCard) {
+      toast.error(`Você já reservou a cartela #${myCard.card_number}`);
+      setSelected(null);
+      return;
+    }
     const name = nameInput.trim().slice(0, 40);
     if (!name) {
       toast.error("Digite seu nome");
+      return;
+    }
+    const duplicated = cards.find(
+      (c) => (c.player_name || "").trim().toLowerCase() === name.toLowerCase()
+    );
+    if (duplicated) {
+      toast.error(`Esse nome já está na cartela #${duplicated.card_number}`);
       return;
     }
     setSaving(true);
@@ -94,6 +106,7 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
       .select()
       .maybeSingle();
     setSaving(false);
+
 
     if (error) {
       console.error("claim error", error);
@@ -162,19 +175,27 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
           <div className="grid grid-cols-[repeat(auto-fill,minmax(84px,1fr))] gap-2">
             {cards.map((card) => {
               const taken = !!card.player_name;
+              const isMine = myCard?.id === card.id;
+              const locked = taken || (!!myCard && !isMine);
               return (
                 <button
                   key={card.id}
-                  disabled={taken}
+                  disabled={locked}
                   onClick={() => {
+                    if (myCard) {
+                      toast.error(`Você já reservou a cartela #${myCard.card_number}`);
+                      return;
+                    }
                     setSelected(card);
                     setNameInput(defaultPlayerName);
                   }}
                   className={cn(
                     "aspect-square rounded-xl border flex flex-col items-center justify-center gap-1 p-1 transition-all",
-                    taken
-                      ? "border-white/5 bg-white/5 opacity-60 cursor-not-allowed"
-                      : "border-purple-400/30 bg-purple-500/15 hover:bg-purple-500/30 hover:scale-[1.03]"
+                    isMine
+                      ? "border-green-400/50 bg-green-500/20"
+                      : locked
+                        ? "border-white/5 bg-white/5 opacity-60 cursor-not-allowed"
+                        : "border-purple-400/30 bg-purple-500/15 hover:bg-purple-500/30 hover:scale-[1.03]"
                   )}
                 >
                   <span className="text-lg font-extrabold text-foreground">#{card.card_number}</span>
@@ -184,6 +205,7 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
                 </button>
               );
             })}
+
           </div>
         </div>
       </div>
