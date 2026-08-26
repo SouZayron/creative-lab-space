@@ -27,6 +27,7 @@ export function CartelaWinnersPanel({ drawn }: Props) {
       .from("bingo_cards")
       .select("id, card_number, user_name, numbers, player_name")
       .not("player_name", "is", null)
+      .neq("player_name", "")
       .order("card_number", { ascending: true });
     setLoading(false);
     if (error) {
