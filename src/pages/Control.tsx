@@ -209,7 +209,7 @@ export const Control = () => {
         {/* Header */}
         <div className="text-center">
           <h1 className="zgames-page-title text-3xl">
-            ZGames · Painel de Controle
+            LabXat · Painel de Controle
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
             {approvedPlayers.length} jogadores • {picks.length} seleções

@@ -4,8 +4,8 @@ const Xat = () => {
   return (
     <>
       <Helmet>
-        <title>AltaVibe Chat | ZGames</title>
-        <meta name="description" content="Entre no chat da Rádio Alta Vibe diretamente no ZGames." />
+        <title>AltaVibe Chat | LabXat</title>
+        <meta name="description" content="Entre no chat da Rádio Alta Vibe diretamente no LabXat." />
       </Helmet>
 
       <div className="fixed inset-0 z-0 bg-background">

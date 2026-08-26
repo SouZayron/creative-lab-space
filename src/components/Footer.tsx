@@ -9,7 +9,7 @@ export const Footer = () => {
     <footer className="mt-auto w-full border-t border-border/60 bg-background/55 py-6 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4">
         <Link to="/" className="flex items-center gap-2 zgames-heading font-extrabold zgames-text-gradient">
-          <Gamepad2 className="size-4 text-primary" /> ZGames
+          <Gamepad2 className="size-4 text-primary" /> LabXat
         </Link>
           <Link
             to="/privacidade"

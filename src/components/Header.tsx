@@ -20,11 +20,11 @@ export const Header = () => {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border/50 bg-background/65 backdrop-blur-2xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Logo */}
-          <Link to="/" aria-label="ZGames - Página inicial" className="flex items-center gap-2 group">
+          <Link to="/" aria-label="LabXat - Página inicial" className="flex items-center gap-2 group">
             <span className="grid size-9 place-items-center rounded-lg border border-primary/30 bg-primary/10 text-primary shadow-neon">
               <Gamepad2 className="size-5" aria-hidden="true" />
             </span>
-            <span className="zgames-heading text-2xl font-extrabold zgames-text-gradient">ZGames</span>
+            <span className="zgames-heading text-2xl font-extrabold zgames-text-gradient">LabXat</span>
           </Link>
 
           {/* Navigation */}

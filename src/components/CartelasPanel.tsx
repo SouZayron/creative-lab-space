@@ -52,7 +52,7 @@ interface CartelasPanelProps {
 
 export function CartelasPanel({ moduleActive = false, onToggleModule }: CartelasPanelProps) {
   const [eventName, setEventName] = useState("");
-  const [title, setTitle] = useState("Bingo ZGames");
+  const [title, setTitle] = useState("Bingo LabXat");
   const [subtitle, setSubtitle] = useState("Boa sorte!");
   const [quantity, setQuantity] = useState(1);
   const [selectedTheme, setSelectedTheme] = useState<ThemeKey>("purple");
@@ -68,7 +68,7 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
 
     setIsGenerating(true);
     const normalizedName = normalizeUserName(eventName.trim());
-    const cardTitle = title.trim() || "Bingo ZGames";
+    const cardTitle = title.trim() || "Bingo LabXat";
     const cardSubtitle = subtitle.trim() || "Boa sorte!";
 
     try {
