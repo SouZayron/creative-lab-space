@@ -194,20 +194,20 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
 
           <div className="grid grid-cols-[repeat(auto-fill,minmax(84px,1fr))] gap-2">
             {cards.map((card) => {
-              const taken = !!card.player_name;
+              const taken = !!(card.player_name || "").trim();
               const isMine = myCard?.id === card.id;
-              const locked = taken || (!!myCard && !isMine);
+              const locked = taken && !isMine;
               return (
                 <button
                   key={card.id}
                   disabled={locked}
                   onClick={() => {
-                    if (myCard) {
-                      toast.error(`Você já reservou a cartela #${myCard.card_number}`);
+                    if (isMine) {
+                      window.open(cardUrl(card), "_blank");
                       return;
                     }
                     setSelected(card);
-                    setNameInput(defaultPlayerName);
+                    setNameInput(myCard?.player_name || defaultPlayerName);
                   }}
                   className={cn(
                     "aspect-square rounded-xl border flex flex-col items-center justify-center gap-1 p-1 transition-all",
