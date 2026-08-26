@@ -41,7 +41,7 @@ const tools: Tool[] = [
 
 const navItems = [
   ["Início", "#inicio"], ["Jogos", "#jogos"], ["Ferramentas", "#ferramentas"],
-  ["Diferenciais", "#diferenciais"], ["Planos", "#planos"], ["Contato", "https://xat.com/mixhits"],
+  ["Diferenciais", "#diferenciais"], ["Planos", "#planos"], ["Contato", "https://xat.com/altavibe"],
 ];
 
 const reveal = {
@@ -100,7 +100,7 @@ const Index = () => {
           </nav>
           <div className="flex items-center gap-2">
             <Button asChild variant="neon" className="hidden rounded-xl sm:inline-flex zgames-pulse">
-              <a href="https://xat.com/mixhits" target="_blank" rel="noopener noreferrer">Quero meu painel <ArrowRight /></a>
+              <a href="https://xat.com/altavibe" target="_blank" rel="noopener noreferrer">Quero meu painel <ArrowRight /></a>
             </Button>
             <Button variant="glass" size="icon" className="lg:hidden" aria-label={menuOpen ? "Fechar menu" : "Abrir menu"} onClick={() => setMenuOpen((open) => !open)}>
               {menuOpen ? <X /> : <Menu />}
@@ -131,7 +131,7 @@ const Index = () => {
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg" variant="neon" className="rounded-xl zgames-pulse"><a href="#jogos">Ver Jogos <ArrowRight /></a></Button>
-                <Button asChild size="lg" variant="glass" className="rounded-xl"><a href="https://xat.com/mixhits" target="_blank" rel="noopener noreferrer">Falar com a gente</a></Button>
+                <Button asChild size="lg" variant="glass" className="rounded-xl"><a href="https://xat.com/altavibe" target="_blank" rel="noopener noreferrer">Falar com a gente</a></Button>
               </div>
               <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-xs font-medium text-muted-foreground">
                 <span className="flex items-center gap-2"><BadgeCheck className="size-4 text-cyan" /> Instalação simplificada</span>
@@ -214,7 +214,7 @@ const Index = () => {
             <Trophy className="mx-auto size-9 text-cyan" />
             <h2 className="zgames-heading mt-5 text-3xl font-extrabold md:text-5xl">Pronto para transformar sua sala?</h2>
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">Escolha seus jogos e leve uma experiência profissional para sua comunidade.</p>
-            <Button asChild size="lg" variant="neon" className="mt-8 rounded-xl zgames-pulse"><a href="https://xat.com/mixhits" target="_blank" rel="noopener noreferrer">Quero meu painel ZGames <ArrowRight /></a></Button>
+            <Button asChild size="lg" variant="neon" className="mt-8 rounded-xl zgames-pulse"><a href="https://xat.com/altavibe" target="_blank" rel="noopener noreferrer">Quero meu painel ZGames <ArrowRight /></a></Button>
           </motion.div>
         </section>
       </main>
@@ -222,8 +222,8 @@ const Index = () => {
       <footer className="mt-16 border-t border-border/60 bg-background/55 px-4 py-10 backdrop-blur-xl sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
           <div><p className="zgames-heading text-2xl font-extrabold zgames-text-gradient">ZGames</p><p className="mt-2 text-xs text-muted-foreground">© 2026 ZGames. Todos os direitos reservados.</p></div>
-          <div className="flex flex-wrap justify-center gap-5 text-xs font-medium text-muted-foreground"><Link to="/sobre" className="hover:text-cyan">Sobre</Link><Link to="/privacidade" className="hover:text-cyan">Privacidade</Link><Link to="/termos" className="hover:text-cyan">Termos</Link><a href="https://xat.com/mixhits" target="_blank" rel="noopener noreferrer" className="hover:text-cyan">Contato</a></div>
-          <a href="https://xat.com/mixhits" target="_blank" rel="noopener noreferrer" aria-label="ZGames no xat" className="grid size-10 place-items-center rounded-xl border border-border bg-card/50 text-muted-foreground transition-colors hover:text-cyan"><Instagram className="size-4" /></a>
+          <div className="flex flex-wrap justify-center gap-5 text-xs font-medium text-muted-foreground"><Link to="/sobre" className="hover:text-cyan">Sobre</Link><Link to="/privacidade" className="hover:text-cyan">Privacidade</Link><Link to="/termos" className="hover:text-cyan">Termos</Link><a href="https://xat.com/altavibe" target="_blank" rel="noopener noreferrer" className="hover:text-cyan">Contato</a></div>
+          <a href="https://xat.com/altavibe" target="_blank" rel="noopener noreferrer" aria-label="ZGames no xat" className="grid size-10 place-items-center rounded-xl border border-border bg-card/50 text-muted-foreground transition-colors hover:text-cyan"><Instagram className="size-4" /></a>
         </div>
       </footer>
     </div>
