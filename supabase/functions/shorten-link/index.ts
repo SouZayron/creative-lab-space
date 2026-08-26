@@ -19,20 +19,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // 1) TinyURL (free, no key)
-    try {
-      const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`);
-      const text = (await res.text()).trim();
-      if (res.ok && /^https:\/\/tinyurl\.com\//.test(text)) {
-        return new Response(JSON.stringify({ shortUrl: text }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-    } catch (_) {
-      // fall through
-    }
-
-    // 2) is.gd fallback
+    // 1) is.gd (free, no key, no ads, direct redirect)
     try {
       const res = await fetch(
         `https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`
@@ -46,6 +33,35 @@ Deno.serve(async (req) => {
     } catch (_) {
       // fall through
     }
+
+    // 2) v.gd fallback (same provider, also ad-free)
+    try {
+      const res = await fetch(
+        `https://v.gd/create.php?format=json&url=${encodeURIComponent(url)}`
+      );
+      const data = await res.json();
+      if (data?.shorturl) {
+        return new Response(JSON.stringify({ shortUrl: data.shorturl }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    } catch (_) {
+      // fall through
+    }
+
+    // 3) TinyURL last resort
+    try {
+      const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`);
+      const text = (await res.text()).trim();
+      if (res.ok && /^https:\/\/tinyurl\.com\//.test(text)) {
+        return new Response(JSON.stringify({ shortUrl: text }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    } catch (_) {
+      // fall through
+    }
+
 
     return new Response(JSON.stringify({ error: "Não foi possível encurtar o link" }), {
       status: 502,
