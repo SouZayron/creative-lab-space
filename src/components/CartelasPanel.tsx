@@ -111,6 +111,18 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
     setGeneratedCards((prev) =>
       prev.map((c) => (map.has(c.id) ? { ...c, playerName: map.get(c.id) as string } : c))
     );
+    // remove rascunhos desatualizados para o nome remoto sempre aparecer
+    setPlayerDrafts((prev) => {
+      let changed = false;
+      const next = { ...prev };
+      map.forEach((remote, id) => {
+        if (remote && next[id] !== undefined && next[id].trim() !== remote) {
+          delete next[id];
+          changed = true;
+        }
+      });
+      return changed ? next : prev;
+    });
   }, [activeEventUser]);
 
   useRealtimeTables({
@@ -124,9 +136,10 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
   const savePlayerName = async (card: GeneratedCard) => {
     const name = (playerDrafts[card.id] ?? card.playerName).trim().slice(0, 40);
     setSavingPlayerId(card.id);
+    // string vazia libera a cartela (nunca null: o banco preserva o nome existente)
     const { error } = await supabase
       .from("bingo_cards")
-      .update({ player_name: name || null })
+      .update({ player_name: name })
       .eq("id", card.id);
     setSavingPlayerId(null);
     if (error) {
@@ -137,8 +150,14 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
     setGeneratedCards((prev) =>
       prev.map((c) => (c.id === card.id ? { ...c, playerName: name } : c))
     );
+    setPlayerDrafts((prev) => {
+      const next = { ...prev };
+      delete next[card.id];
+      return next;
+    });
     toast.success(name ? `Jogador "${name}" vinculado à cartela #${card.cardNumber}` : "Jogador removido");
   };
+
 
 
   const fullLink = (card: GeneratedCard) =>
