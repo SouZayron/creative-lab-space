@@ -396,45 +396,24 @@ export const Games = () => {
                     {owner.name}
                   </span>
                 )}
-                {isMine && !isMultiPickGame && (
-                  <button
-                    type="button"
-                    onClick={(e) => handleCopyBlock(e, item)}
-                    className={`mt-1.5 inline-flex items-center justify-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-md cursor-pointer transition-colors ${
-                      isCopied
-                        ? 'bg-green-500 text-white'
-                        : 'bg-white/20 backdrop-blur text-white hover:bg-white/30'
-                    }`}
-                  >
-                    {isCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                    {isCopied ? 'Copiado' : 'Copiar'}
-                  </button>
-                )}
               </div>
             );
           })}
         </div>
 
-        {isMultiPickGame && (
-          <div className="flex-shrink-0 backdrop-blur-md bg-white/5 border border-white/10 rounded-lg p-1.5 flex items-center gap-2 min-h-[44px]">
-            <div className="flex-1 bg-background/40 border border-white/10 rounded-md px-2 py-1 text-center min-w-0 overflow-hidden">
-              <span className="text-xs font-bold text-foreground break-words leading-tight">
-                {myPicks.length > 0
-                  ? myPicks.map(p => p.pick_value).join(' - ')
-                  : <span className="text-muted-foreground font-normal">Selecione 2 {itemLabel}</span>}
-              </span>
-            </div>
+        {myPicks.length > 0 && (
+          <div className="flex-shrink-0 flex justify-center py-1">
             <Button
-              onClick={handleCopyAnimalsCombo}
-              disabled={myPicks.length === 0}
+              onClick={() => setPickDialogOpen(true)}
               size="sm"
-              className={`h-9 flex-shrink-0 ${copiedKey === 'combo' ? 'bg-green-500 hover:bg-green-500' : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90'}`}
+              className="h-9 bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90"
             >
-              {copiedKey === 'combo' ? <Check className="w-4 h-4 mr-1" /> : <Copy className="w-4 h-4 mr-1" />}
-              {copiedKey === 'combo' ? 'Copiado!' : 'Copiar'}
+              <Copy className="w-4 h-4 mr-1" />
+              Ver meus palpites
             </Button>
           </div>
         )}
+
 
         {!isMultiPickGame && (
           <div className="mt-8 flex flex-wrap justify-center gap-4 text-sm">
