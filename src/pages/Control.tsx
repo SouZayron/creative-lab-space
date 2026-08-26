@@ -66,6 +66,7 @@ export const Control = () => {
     try { return JSON.parse(localStorage.getItem("control_cartelas_drawn") || "[]"); } catch { return []; }
   });
   const cartelaDrawnInitial = useRef<string[]>(cartelaDrawn);
+  const [cartelasResetKey, setCartelasResetKey] = useState(0);
 
   useEffect(() => {
     try { localStorage.setItem("control_cartelas_module", cartelasModuleActive ? "1" : "0"); } catch { /* noop */ }
@@ -523,6 +524,7 @@ export const Control = () => {
           {/* ===== CARTELAS ===== */}
           <TabsContent value="cartelas" className="mt-6 h-[calc(100vh-190px)] min-h-0">
             <CartelasPanel
+              key={cartelasResetKey}
               moduleActive={cartelasModuleActive}
               onToggleModule={(active) => {
                 setCartelasModuleActive(active);
