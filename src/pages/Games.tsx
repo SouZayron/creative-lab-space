@@ -1,7 +1,8 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useRealtimeTables } from "@/hooks/useRealtimeTables";
 import { GAME_NAMES, GAME_ICONS, GAME_ITEM_LABEL, getGameItems, isItemGame, getPowerIconUrl } from "@/data/gameData";
@@ -37,6 +38,7 @@ export const Games = () => {
   const [allPlayers, setAllPlayers] = useState<GamePlayer[]>([]);
   const [bombaState, setBombaState] = useState<{ is_open: boolean; status: string } | null>(null);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [pickDialogOpen, setPickDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const submittingRef = useRef(false);
   const { toast } = useToast();
@@ -141,6 +143,13 @@ export const Games = () => {
   const myPicks = currentPlayer ? picks.filter(p => p.player_id === currentPlayer.id) : [];
   const maxPicks = isItemGame(activeRoom?.game_type) ? 2 : 1;
   const reachedLimit = myPicks.length >= maxPicks;
+
+  // Abre o popup central assim que o jogador completa suas escolhas
+  useEffect(() => {
+    if (reachedLimit) setPickDialogOpen(true);
+  }, [reachedLimit]);
+
+
 
   const handleSelectBlock = async (block: string) => {
     if (!currentPlayer || !activeRoom || reachedLimit) return;
@@ -387,45 +396,24 @@ export const Games = () => {
                     {owner.name}
                   </span>
                 )}
-                {isMine && !isMultiPickGame && (
-                  <button
-                    type="button"
-                    onClick={(e) => handleCopyBlock(e, item)}
-                    className={`mt-1.5 inline-flex items-center justify-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-md cursor-pointer transition-colors ${
-                      isCopied
-                        ? 'bg-green-500 text-white'
-                        : 'bg-white/20 backdrop-blur text-white hover:bg-white/30'
-                    }`}
-                  >
-                    {isCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                    {isCopied ? 'Copiado' : 'Copiar'}
-                  </button>
-                )}
               </div>
             );
           })}
         </div>
 
-        {isMultiPickGame && (
-          <div className="flex-shrink-0 backdrop-blur-md bg-white/5 border border-white/10 rounded-lg p-1.5 flex items-center gap-2 min-h-[44px]">
-            <div className="flex-1 bg-background/40 border border-white/10 rounded-md px-2 py-1 text-center min-w-0 overflow-hidden">
-              <span className="text-xs font-bold text-foreground break-words leading-tight">
-                {myPicks.length > 0
-                  ? myPicks.map(p => p.pick_value).join(' - ')
-                  : <span className="text-muted-foreground font-normal">Selecione 2 {itemLabel}</span>}
-              </span>
-            </div>
+        {myPicks.length > 0 && (
+          <div className="flex-shrink-0 flex justify-center py-1">
             <Button
-              onClick={handleCopyAnimalsCombo}
-              disabled={myPicks.length === 0}
+              onClick={() => setPickDialogOpen(true)}
               size="sm"
-              className={`h-9 flex-shrink-0 ${copiedKey === 'combo' ? 'bg-green-500 hover:bg-green-500' : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90'}`}
+              className="h-9 bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90"
             >
-              {copiedKey === 'combo' ? <Check className="w-4 h-4 mr-1" /> : <Copy className="w-4 h-4 mr-1" />}
-              {copiedKey === 'combo' ? 'Copiado!' : 'Copiar'}
+              <Copy className="w-4 h-4 mr-1" />
+              Ver meus palpites
             </Button>
           </div>
         )}
+
 
         {!isMultiPickGame && (
           <div className="mt-8 flex flex-wrap justify-center gap-4 text-sm">
@@ -444,7 +432,40 @@ export const Games = () => {
           </div>
         )}
       </div>
+
+      <Dialog open={pickDialogOpen && myPicks.length > 0} onOpenChange={setPickDialogOpen}>
+        <DialogContent className="max-w-sm border-purple-400/30 bg-background/80 backdrop-blur-xl">
+          <DialogHeader>
+            <DialogTitle className="text-center text-lg bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              {gameIcon} {gameName}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Jogador: <span className="font-semibold text-purple-400">{currentPlayer.name}</span>
+            </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {myPicks.map((p) => (
+                <span
+                  key={p.id}
+                  className="rounded-lg border border-purple-300/30 bg-white/10 px-3 py-2 text-base font-bold text-foreground"
+                >
+                  {p.pick_value}
+                </span>
+              ))}
+            </div>
+            <Button
+              onClick={handleCopyAnimalsCombo}
+              className={`w-full ${copiedKey === 'combo' ? 'bg-green-500 hover:bg-green-500' : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90'}`}
+            >
+              {copiedKey === 'combo' ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+              {copiedKey === 'combo' ? 'Copiado!' : 'Copiar'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
+
   );
 };
 
