@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { LayoutGrid, Shuffle, Link2, Copy, Check, Loader2, Palette, Power, PowerOff, Scissors } from "lucide-react";
+import { LayoutGrid, Shuffle, Link2, Copy, Check, Loader2, Palette, Power, PowerOff, Scissors, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -18,7 +18,9 @@ interface GeneratedCard {
   title: string;
   subtitle: string;
   theme: string;
+  playerName: string;
 }
+
 
 const DEFAULT_PASSWORD = "7845";
 
@@ -62,6 +64,28 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
   const [shortLinks, setShortLinks] = useState<Record<string, string>>({});
   const [shorteningId, setShorteningId] = useState<string | null>(null);
   const [isShorteningAll, setIsShorteningAll] = useState(false);
+  const [playerDrafts, setPlayerDrafts] = useState<Record<string, string>>({});
+  const [savingPlayerId, setSavingPlayerId] = useState<string | null>(null);
+
+  const savePlayerName = async (card: GeneratedCard) => {
+    const name = (playerDrafts[card.id] ?? card.playerName).trim().slice(0, 40);
+    setSavingPlayerId(card.id);
+    const { error } = await supabase
+      .from("bingo_cards")
+      .update({ player_name: name || null })
+      .eq("id", card.id);
+    setSavingPlayerId(null);
+    if (error) {
+      console.error("save player error", error);
+      toast.error("Erro ao salvar jogador");
+      return;
+    }
+    setGeneratedCards((prev) =>
+      prev.map((c) => (c.id === card.id ? { ...c, playerName: name } : c))
+    );
+    toast.success(name ? `Jogador "${name}" vinculado à cartela #${card.cardNumber}` : "Jogador removido");
+  };
+
 
   const fullLink = (card: GeneratedCard) =>
     `${window.location.origin}${getCardPath(card.userName, card.cardNumber)}`;
@@ -145,6 +169,7 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
       }
 
       setShortLinks({});
+      setPlayerDrafts({});
       setGeneratedCards(
         (data || []).map((card) => ({
           id: card.id,
@@ -154,8 +179,10 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
           title: card.title,
           subtitle: card.subtitle,
           theme: card.theme,
+          playerName: (card as { player_name?: string | null }).player_name || "",
         }))
       );
+
       toast.success(`${quantity} cartela${quantity > 1 ? "s" : ""} gerada${quantity > 1 ? "s" : ""}!`);
     } catch (err) {
       console.error("Error generating cards:", err);
@@ -362,8 +389,9 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
               return (
                 <div
                   key={card.id}
-                  className="flex items-center justify-between gap-3 p-3 rounded-lg bg-white/5 border border-white/10"
+                  className="grid gap-2 p-3 rounded-lg bg-white/5 border border-white/10"
                 >
+                  <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
                     <div
                       className={cn(
@@ -411,7 +439,43 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
                       </Button>
                     </a>
                   </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <UserPlus className="w-4 h-4 shrink-0 text-muted-foreground" />
+                    <Input
+                      value={playerDrafts[card.id] ?? card.playerName}
+                      onChange={(e) =>
+                        setPlayerDrafts((p) => ({ ...p, [card.id]: e.target.value }))
+                      }
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") savePlayerName(card);
+                      }}
+                      maxLength={40}
+                      placeholder="Nome do jogador"
+                      className="h-8 text-sm bg-background/50 border-border/50"
+                    />
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8"
+                      onClick={() => savePlayerName(card)}
+                      disabled={savingPlayerId === card.id}
+                    >
+                      {savingPlayerId === card.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        "OK"
+                      )}
+                    </Button>
+                  </div>
+                  {card.playerName && (
+                    <p className="text-[11px] text-green-400">
+                      Jogador vinculado: {card.playerName}
+                    </p>
+                  )}
                 </div>
+
               );
             })}
           </div>

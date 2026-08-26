@@ -211,6 +211,7 @@ export type Database = {
           id: string
           marked_numbers: number[] | null
           numbers: number[]
+          player_name: string | null
           subtitle: string
           theme: string
           title: string
@@ -224,6 +225,7 @@ export type Database = {
           id?: string
           marked_numbers?: number[] | null
           numbers: number[]
+          player_name?: string | null
           subtitle?: string
           theme?: string
           title?: string
@@ -237,6 +239,7 @@ export type Database = {
           id?: string
           marked_numbers?: number[] | null
           numbers?: number[]
+          player_name?: string | null
           subtitle?: string
           theme?: string
           title?: string
