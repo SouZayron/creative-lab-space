@@ -80,9 +80,21 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
 
   const claim = async () => {
     if (!selected) return;
+    if (myCard) {
+      toast.error(`Você já reservou a cartela #${myCard.card_number}`);
+      setSelected(null);
+      return;
+    }
     const name = nameInput.trim().slice(0, 40);
     if (!name) {
       toast.error("Digite seu nome");
+      return;
+    }
+    const duplicated = cards.find(
+      (c) => (c.player_name || "").trim().toLowerCase() === name.toLowerCase()
+    );
+    if (duplicated) {
+      toast.error(`Esse nome já está na cartela #${duplicated.card_number}`);
       return;
     }
     setSaving(true);
@@ -94,6 +106,7 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
       .select()
       .maybeSingle();
     setSaving(false);
+
 
     if (error) {
       console.error("claim error", error);
