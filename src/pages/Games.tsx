@@ -144,6 +144,13 @@ export const Games = () => {
   const maxPicks = isItemGame(activeRoom?.game_type) ? 2 : 1;
   const reachedLimit = myPicks.length >= maxPicks;
 
+  // Abre o popup central assim que o jogador completa suas escolhas
+  useEffect(() => {
+    if (reachedLimit) setPickDialogOpen(true);
+  }, [reachedLimit]);
+
+
+
   const handleSelectBlock = async (block: string) => {
     if (!currentPlayer || !activeRoom || reachedLimit) return;
     if (submittingRef.current) return; // bloqueia duplo-clique síncrono
