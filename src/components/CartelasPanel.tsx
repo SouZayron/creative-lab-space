@@ -72,15 +72,16 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
   const [shorteningId, setShorteningId] = useState<string | null>(null);
   const [isShorteningAll, setIsShorteningAll] = useState(false);
   const [playerDrafts, setPlayerDrafts] = useState<Record<string, string>>(() => (loadState().playerDrafts as Record<string, string>) ?? {});
+  const [panelOpen, setPanelOpen] = useState<boolean>(() => (loadState().panelOpen as boolean) ?? true);
 
   useEffect(() => {
     try {
       localStorage.setItem(
         LS_KEY,
-        JSON.stringify({ eventName, title, subtitle, quantity, selectedTheme, generatedCards, shortLinks, playerDrafts })
+        JSON.stringify({ eventName, title, subtitle, quantity, selectedTheme, generatedCards, shortLinks, playerDrafts, panelOpen })
       );
     } catch { /* noop */ }
-  }, [eventName, title, subtitle, quantity, selectedTheme, generatedCards, shortLinks, playerDrafts]);
+  }, [eventName, title, subtitle, quantity, selectedTheme, generatedCards, shortLinks, playerDrafts, panelOpen]);
   const [savingPlayerId, setSavingPlayerId] = useState<string | null>(null);
 
   const activeEventUser = generatedCards[0]?.userName || "";
@@ -93,11 +94,12 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
         id: 1,
         event_name: activeEventUser,
         total_cards: generatedCards.length,
-        is_active: moduleActive && generatedCards.length > 0,
+        is_active: moduleActive && panelOpen && generatedCards.length > 0,
         updated_at: new Date().toISOString(),
       })
       .then(({ error }) => { if (error) console.error("cartelas_event sync", error); });
-  }, [moduleActive, activeEventUser, generatedCards.length]);
+  }, [moduleActive, panelOpen, activeEventUser, generatedCards.length]);
+
 
   // sincroniza jogadores que reservaram cartela pelo /games (realtime)
   const syncPlayers = useCallback(async () => {
