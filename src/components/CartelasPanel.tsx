@@ -389,8 +389,9 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
               return (
                 <div
                   key={card.id}
-                  className="flex items-center justify-between gap-3 p-3 rounded-lg bg-white/5 border border-white/10"
+                  className="grid gap-2 p-3 rounded-lg bg-white/5 border border-white/10"
                 >
+                  <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
                     <div
                       className={cn(
@@ -438,7 +439,43 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
                       </Button>
                     </a>
                   </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <UserPlus className="w-4 h-4 shrink-0 text-muted-foreground" />
+                    <Input
+                      value={playerDrafts[card.id] ?? card.playerName}
+                      onChange={(e) =>
+                        setPlayerDrafts((p) => ({ ...p, [card.id]: e.target.value }))
+                      }
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") savePlayerName(card);
+                      }}
+                      maxLength={40}
+                      placeholder="Nome do jogador"
+                      className="h-8 text-sm bg-background/50 border-border/50"
+                    />
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8"
+                      onClick={() => savePlayerName(card)}
+                      disabled={savingPlayerId === card.id}
+                    >
+                      {savingPlayerId === card.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        "OK"
+                      )}
+                    </Button>
+                  </div>
+                  {card.playerName && (
+                    <p className="text-[11px] text-green-400">
+                      Jogador vinculado: {card.playerName}
+                    </p>
+                  )}
                 </div>
+
               );
             })}
           </div>
