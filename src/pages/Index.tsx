@@ -134,7 +134,7 @@ const Index = () => {
                 <Button asChild size="lg" variant="glass" className="rounded-xl"><a href="https://xat.com/altavibe" target="_blank" rel="noopener noreferrer">Falar com a gente</a></Button>
               </div>
               <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-xs font-medium text-muted-foreground">
-                <span className="flex items-center gap-2"><BadgeCheck className="size-4 text-cyan" /> Instalação simplificada</span>
+                <span className="flex items-center gap-2"><BadgeCheck className="size-4 text-cyan" /> Sem Instalação</span>
                 <span className="flex items-center gap-2"><ShieldCheck className="size-4 text-cyan" /> Suporte contínuo</span>
               </div>
             </motion.div>
@@ -192,7 +192,7 @@ const Index = () => {
                 </motion.div>
               ))}
             </div>
-            <div className="mt-5 text-center"><Button asChild variant="glass"><Link to="/sobre">Conheça o projeto</Link></Button></div>
+            
           </div>
         </section>
 
