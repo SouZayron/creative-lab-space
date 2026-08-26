@@ -336,10 +336,20 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
             Cartelas Geradas ({generatedCards.length})
           </h2>
           {generatedCards.length > 0 && (
-            <Button size="sm" variant="outline" onClick={copyAllLinks}>
-              <Copy className="w-4 h-4 mr-2" />
-              Copiar todos
-            </Button>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={handleShortenAll} disabled={isShorteningAll}>
+                {isShorteningAll ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Scissors className="w-4 h-4 mr-2" />
+                )}
+                Encurtar todos
+              </Button>
+              <Button size="sm" variant="outline" onClick={copyAllLinks}>
+                <Copy className="w-4 h-4 mr-2" />
+                Copiar todos
+              </Button>
+            </div>
           )}
         </div>
 
