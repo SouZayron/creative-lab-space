@@ -65,6 +65,7 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
   const [selectedTheme, setSelectedTheme] = useState<ThemeKey>(() => (loadState().selectedTheme as ThemeKey) ?? "purple");
   const [generatedCards, setGeneratedCards] = useState<GeneratedCard[]>(() => (loadState().generatedCards as GeneratedCard[]) ?? []);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [copiedNumbersId, setCopiedNumbersId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [shortLinks, setShortLinks] = useState<Record<string, string>>(() => (loadState().shortLinks as Record<string, string>) ?? {});
   const [shorteningId, setShorteningId] = useState<string | null>(null);
@@ -523,6 +524,30 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
                       Jogador vinculado: {card.playerName}
                     </p>
                   )}
+                  <div className="flex items-center gap-2 pt-1 border-t border-white/10">
+                    <p className="flex-1 text-[11px] font-mono text-muted-foreground truncate">
+                      {card.numbers.join(" ")}
+                    </p>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 px-2 shrink-0"
+                      title="Copiar números"
+                      onClick={() => {
+                        navigator.clipboard.writeText(card.numbers.join(" "));
+                        setCopiedNumbersId(card.id);
+                        toast.success("Números copiados!");
+                        setTimeout(() => setCopiedNumbersId(null), 1500);
+                      }}
+                    >
+                      {copiedNumbersId === card.id ? (
+                        <Check className="w-3.5 h-3.5 text-green-500" />
+                      ) : (
+                        <Copy className="w-3.5 h-3.5" />
+                      )}
+                    </Button>
+                  </div>
+
                 </div>
 
               );
