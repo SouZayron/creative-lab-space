@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useRealtimeTables } from "@/hooks/useRealtimeTables";
 import { Button } from "@/components/ui/button";
 import { Trophy, RefreshCw, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -35,11 +36,12 @@ export function CartelaWinnersPanel({ drawn }: Props) {
     setCards((data as unknown as CardRow[]) || []);
   }, []);
 
-  useEffect(() => {
-    load();
-    const t = window.setInterval(load, 15000);
-    return () => window.clearInterval(t);
-  }, [load]);
+  useRealtimeTables({
+    channelName: "cartela-winners-realtime",
+    fallbackMs: 3000,
+    onSync: load,
+    tables: ["bingo_cards"],
+  });
 
   const drawnSet = useMemo(() => new Set(drawn.map((d) => parseInt(d, 10))), [drawn]);
 

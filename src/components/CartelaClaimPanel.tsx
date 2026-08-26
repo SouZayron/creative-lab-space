@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useRealtimeTables } from "@/hooks/useRealtimeTables";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -48,11 +49,13 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
     setCards((data as unknown as CardRow[]) || []);
   }, [eventName]);
 
-  useEffect(() => {
-    load();
-    const t = window.setInterval(load, 8000);
-    return () => window.clearInterval(t);
-  }, [load]);
+  useRealtimeTables({
+    channelName: "cartela-claim-realtime",
+    enabled: !!eventName,
+    fallbackMs: 2500,
+    onSync: load,
+    tables: ["bingo_cards", "cartelas_event"],
+  });
 
   const cardUrl = (card: CardRow) =>
     `${window.location.origin}/bingo/cartela/${card.user_name}/${card.card_number}`;

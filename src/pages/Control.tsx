@@ -92,8 +92,9 @@ export const Control = () => {
   useRealtimeTables({
     channelName: "control-realtime",
     enabled: isAuthenticated,
+    fallbackMs: 1500,
     onSync: fetchData,
-    tables: ["game_rooms", "game_picks", "game_players"],
+    tables: ["game_rooms", "game_picks", "game_players", "cartelas_event", "bingo_cards"],
   });
 
   // Mantém a roleta no jogo aberto mais recente (só troca quando outro jogo é aberto)
