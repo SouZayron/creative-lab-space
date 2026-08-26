@@ -576,6 +576,30 @@ export type Database = {
         }
         Relationships: []
       }
+      cartelas_event: {
+        Row: {
+          event_name: string
+          id: number
+          is_active: boolean
+          total_cards: number
+          updated_at: string
+        }
+        Insert: {
+          event_name?: string
+          id?: number
+          is_active?: boolean
+          total_cards?: number
+          updated_at?: string
+        }
+        Update: {
+          event_name?: string
+          id?: number
+          is_active?: boolean
+          total_cards?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       game_picks: {
         Row: {
           created_at: string
