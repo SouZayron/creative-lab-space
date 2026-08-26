@@ -38,6 +38,7 @@ export const Games = () => {
   const [allPlayers, setAllPlayers] = useState<GamePlayer[]>([]);
   const [bombaState, setBombaState] = useState<{ is_open: boolean; status: string } | null>(null);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [pickDialogOpen, setPickDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const submittingRef = useRef(false);
   const { toast } = useToast();
