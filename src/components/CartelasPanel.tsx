@@ -18,7 +18,9 @@ interface GeneratedCard {
   title: string;
   subtitle: string;
   theme: string;
+  playerName: string;
 }
+
 
 const DEFAULT_PASSWORD = "7845";
 
