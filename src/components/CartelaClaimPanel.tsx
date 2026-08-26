@@ -80,8 +80,7 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
 
   const claim = async () => {
     if (!selected) return;
-    if (myCard) {
-      toast.error(`Você já reservou a cartela #${myCard.card_number}`);
+    if (myCard && myCard.id === selected.id) {
       setSelected(null);
       return;
     }
@@ -91,7 +90,9 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
       return;
     }
     const duplicated = cards.find(
-      (c) => (c.player_name || "").trim().toLowerCase() === name.toLowerCase()
+      (c) =>
+        c.id !== myCard?.id &&
+        (c.player_name || "").trim().toLowerCase() === name.toLowerCase()
     );
     if (duplicated) {
       toast.error(`Esse nome já está na cartela #${duplicated.card_number}`);
@@ -105,20 +106,35 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
       .or("player_name.is.null,player_name.eq.")
       .select()
       .maybeSingle();
-    setSaving(false);
-
 
     if (error) {
+      setSaving(false);
       console.error("claim error", error);
       toast.error("Erro ao reservar a cartela");
       return;
     }
     if (!data) {
+      setSaving(false);
       toast.error("Essa cartela já foi escolhida por outro jogador");
       setSelected(null);
       load();
       return;
     }
+
+    // libera a cartela anterior (troca)
+    const previous = myCard;
+    if (previous && previous.id !== selected.id) {
+      const { error: freeError } = await supabase
+        .from("bingo_cards")
+        .update({ player_name: "" })
+        .eq("id", previous.id);
+      if (freeError) {
+        console.error("release error", freeError);
+      } else {
+        delete knownNames.current[previous.id];
+      }
+    }
+    setSaving(false);
 
     const claimed = { ...selected, player_name: name };
     knownNames.current[claimed.id] = name;
@@ -128,7 +144,11 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
     } catch { /* noop */ }
     setSelected(null);
     load();
-    toast.success(`Cartela #${claimed.card_number} é sua!`);
+    toast.success(
+      previous && previous.id !== claimed.id
+        ? `Trocou para a cartela #${claimed.card_number}!`
+        : `Cartela #${claimed.card_number} é sua!`
+    );
     window.open(cardUrl(claimed), "_blank");
   };
 
