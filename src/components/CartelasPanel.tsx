@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useRealtimeTables } from "@/hooks/useRealtimeTables";
 
 const LS_KEY = "control_cartelas_state";
 const loadState = (): Record<string, unknown> => {
@@ -98,24 +99,27 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
       .then(({ error }) => { if (error) console.error("cartelas_event sync", error); });
   }, [moduleActive, activeEventUser, generatedCards.length]);
 
-  // sincroniza jogadores que reservaram cartela pelo /games
-  useEffect(() => {
+  // sincroniza jogadores que reservaram cartela pelo /games (realtime)
+  const syncPlayers = useCallback(async () => {
     if (!activeEventUser) return;
-    const sync = async () => {
-      const { data } = await supabase
-        .from("bingo_cards")
-        .select("id, player_name")
-        .eq("user_name", activeEventUser);
-      if (!data) return;
-      const map = new Map(data.map((d) => [d.id, (d as { player_name?: string | null }).player_name || ""]));
-      setGeneratedCards((prev) =>
-        prev.map((c) => (map.has(c.id) ? { ...c, playerName: map.get(c.id) as string } : c))
-      );
-    };
-    sync();
-    const t = window.setInterval(sync, 10000);
-    return () => window.clearInterval(t);
+    const { data } = await supabase
+      .from("bingo_cards")
+      .select("id, player_name")
+      .eq("user_name", activeEventUser);
+    if (!data) return;
+    const map = new Map(data.map((d) => [d.id, (d as { player_name?: string | null }).player_name || ""]));
+    setGeneratedCards((prev) =>
+      prev.map((c) => (map.has(c.id) ? { ...c, playerName: map.get(c.id) as string } : c))
+    );
   }, [activeEventUser]);
+
+  useRealtimeTables({
+    channelName: "control-cartelas-realtime",
+    enabled: !!activeEventUser,
+    fallbackMs: 2500,
+    onSync: syncPlayers,
+    tables: ["bingo_cards"],
+  });
 
   const savePlayerName = async (card: GeneratedCard) => {
     const name = (playerDrafts[card.id] ?? card.playerName).trim().slice(0, 40);
