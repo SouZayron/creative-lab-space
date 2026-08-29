@@ -27,7 +27,6 @@ interface Props {
 
 export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) {
   const [cards, setCards] = useState<CardRow[]>([]);
-  const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<CardRow | null>(null);
   const [nameInput, setNameInput] = useState(defaultPlayerName);
   const [saving, setSaving] = useState(false);
@@ -45,13 +44,11 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
 
   const load = useCallback(async () => {
     if (!eventName) return;
-    setLoading(true);
     const { data, error } = await supabase
       .from("bingo_cards")
       .select("id, card_number, user_name, player_name")
       .eq("user_name", eventName)
       .order("card_number", { ascending: true });
-    setLoading(false);
     if (error) {
       console.error("load cartelas error", error);
       return;
