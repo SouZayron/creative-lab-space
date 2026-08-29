@@ -88,17 +88,21 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
 
   // publica o evento ativo para a página /games
   useEffect(() => {
+    // nunca sobrescreve o evento quando esta sessão não tem cartelas geradas
+    // (ex.: /control aberto em outro navegador sem o estado local)
+    if (!activeEventUser || generatedCards.length === 0) return;
     supabase
       .from("cartelas_event")
       .upsert({
         id: 1,
         event_name: activeEventUser,
         total_cards: generatedCards.length,
-        is_active: moduleActive && panelOpen && generatedCards.length > 0,
+        is_active: moduleActive && panelOpen,
         updated_at: new Date().toISOString(),
       })
       .then(({ error }) => { if (error) console.error("cartelas_event sync", error); });
   }, [moduleActive, panelOpen, activeEventUser, generatedCards.length]);
+
 
 
   // sincroniza jogadores que reservaram cartela pelo /games (realtime)
