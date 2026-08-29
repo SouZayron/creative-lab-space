@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useRef, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRealtimeTables } from "@/hooks/useRealtimeTables";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,7 @@ interface Props {
 export function CartelaWinnersPanel({ drawn }: Props) {
   const [cards, setCards] = useState<CardRow[]>([]);
   const [loading, setLoading] = useState(false);
+  const claimTimes = useRef<Record<string, number>>({});
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -34,7 +35,24 @@ export function CartelaWinnersPanel({ drawn }: Props) {
       console.error("load cards error", error);
       return;
     }
-    setCards((data as unknown as CardRow[]) || []);
+    const rows = (data as unknown as CardRow[]) || [];
+    const now = Date.now();
+    rows.forEach((r) => {
+      const key = `${r.id}|${(r.player_name || "").trim().toLowerCase()}`;
+      if (!claimTimes.current[key]) claimTimes.current[key] = now;
+    });
+    // um jogador = apenas a cartela atual (a mais recente que ele reservou)
+    const byPlayer = new Map<string, CardRow>();
+    rows.forEach((r) => {
+      const name = (r.player_name || "").trim().toLowerCase();
+      if (!name) return;
+      const current = byPlayer.get(name);
+      if (!current) { byPlayer.set(name, r); return; }
+      const tNew = claimTimes.current[`${r.id}|${name}`] ?? 0;
+      const tOld = claimTimes.current[`${current.id}|${name}`] ?? 0;
+      if (tNew > tOld) byPlayer.set(name, r);
+    });
+    setCards(Array.from(byPlayer.values()));
   }, []);
 
   useRealtimeTables({

@@ -107,7 +107,16 @@ export const cardThemes = {
     markedBg: "from-green-500/80 to-emerald-500/80",
     preview: "from-green-500 to-emerald-500",
   },
+  bday: {
+    name: "🎉 Aniversário",
+    cardBg: "from-white/10 via-white/5 to-black/40",
+    numberBg: "from-white/15 to-white/5",
+    numberHover: "hover:from-white/30 hover:to-white/15",
+    markedBg: "from-neutral-900 to-black",
+    preview: "from-white to-neutral-400",
+  },
 };
+
 
 export type ThemeKey = keyof typeof cardThemes;
 

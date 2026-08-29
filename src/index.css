@@ -689,3 +689,29 @@
   margin: 1.5rem 0;
 }
 .blog-content pre code { background: transparent; padding: 0; color: hsl(var(--foreground)); }
+
+/* ===== Tema Aniversário: confetes animados ===== */
+@keyframes bday-confetti-fall {
+  0% { transform: translate3d(0, -12vh, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translate3d(var(--drift, 0px), 112vh, 0) rotate(720deg); opacity: 0.9; }
+}
+
+.bday-confetti-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 5;
+}
+
+.bday-confetti {
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  animation-name: bday-confetti-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}

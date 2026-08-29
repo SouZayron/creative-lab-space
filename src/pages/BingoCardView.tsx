@@ -190,12 +190,47 @@ export function BingoCardView() {
   }
 
   const theme = cardThemes[cardData.theme] || cardThemes.purple;
+  const isBday = cardData.theme === "bday";
 
   return (
-    <div className="min-h-screen zgames-page zgames-grid-line relative overflow-x-hidden flex flex-col items-center justify-center p-4">
-      <FloatingBlob color="blue" size="lg" position={{ top: "-10%", left: "-5%" }} animation="float" />
-      <FloatingBlob color="purple" size="md" position={{ top: "30%", right: "-10%" }} animation="float-delayed" />
-      <FloatingBlob color="pink" size="sm" position={{ bottom: "20%", left: "10%" }} animation="float-slow" />
+    <div
+      className={cn(
+        "min-h-screen zgames-page zgames-grid-line relative overflow-x-hidden flex flex-col items-center justify-center p-4",
+        isBday && "bg-black"
+      )}
+    >
+      {isBday ? (
+        <div className="bday-confetti-layer" aria-hidden="true">
+          {Array.from({ length: 60 }).map((_, i) => {
+            const left = (i * 37) % 100;
+            const duration = 4 + ((i * 7) % 50) / 10;
+            const delay = ((i * 13) % 60) / 10;
+            const drift = ((i % 7) - 3) * 40;
+            const white = i % 2 === 0;
+            return (
+              <span
+                key={i}
+                className="bday-confetti"
+                style={{
+                  left: `${left}%`,
+                  animationDuration: `${duration}s`,
+                  animationDelay: `-${delay}s`,
+                  background: white ? "#ffffff" : "#111111",
+                  border: white ? "none" : "1px solid rgba(255,255,255,0.7)",
+                  ["--drift" as string]: `${drift}px`,
+                }}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        <>
+          <FloatingBlob color="blue" size="lg" position={{ top: "-10%", left: "-5%" }} animation="float" />
+          <FloatingBlob color="purple" size="md" position={{ top: "30%", right: "-10%" }} animation="float-delayed" />
+          <FloatingBlob color="pink" size="sm" position={{ bottom: "20%", left: "10%" }} animation="float-slow" />
+        </>
+      )}
+
 
       <div className="relative z-10 w-full max-w-sm">
         {/* Card Number */}
