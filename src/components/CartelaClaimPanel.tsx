@@ -71,7 +71,8 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
     setMyCard((prev) => {
       if (!prev) return prev;
       const found = rows.find((r) => r.id === prev.id);
-      if (found && !(found.player_name || "").trim()) {
+      // cartela sumiu (admin resetou) ou foi liberada: limpa seleção local
+      if (!found || !(found.player_name || "").trim()) {
         try { localStorage.removeItem(`cartela-claim-${eventName}`); } catch { /* noop */ }
         return null;
       }
