@@ -112,7 +112,7 @@ export const cardThemes = {
     cardBg: "from-white/10 via-white/5 to-black/40",
     numberBg: "from-white/15 to-white/5",
     numberHover: "hover:from-white/30 hover:to-white/15",
-    markedBg: "from-white/90 to-white/70",
+    markedBg: "from-neutral-900 to-black",
     preview: "from-white to-neutral-400",
   },
 };
