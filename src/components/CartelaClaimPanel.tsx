@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { LayoutGrid, Check, ExternalLink, RefreshCw } from "lucide-react";
+import { LayoutGrid, Check, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -57,20 +57,35 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
       return;
     }
     const rows = ((data as unknown as CardRow[]) || []).map((row) => {
-      const remote = (row.player_name || "").trim();
+      const raw = row.player_name;
+      const remote = (raw || "").trim();
       if (remote) {
         knownNames.current[row.id] = remote;
         return { ...row, player_name: remote };
       }
+      // string vazia = cartela liberada de verdade (limpa cache local)
+      if (raw !== null && raw !== undefined) {
+        delete knownNames.current[row.id];
+        return { ...row, player_name: null };
+      }
       return { ...row, player_name: knownNames.current[row.id] || null };
     });
     setCards(rows);
+    setMyCard((prev) => {
+      if (!prev) return prev;
+      const found = rows.find((r) => r.id === prev.id);
+      if (found && !(found.player_name || "").trim()) {
+        try { localStorage.removeItem(`cartela-claim-${eventName}`); } catch { /* noop */ }
+        return null;
+      }
+      return prev;
+    });
   }, [eventName]);
 
   useRealtimeTables({
     channelName: "cartela-claim-realtime",
     enabled: !!eventName,
-    fallbackMs: 2500,
+    fallbackMs: 1200,
     onSync: load,
     tables: ["bingo_cards", "cartelas_event"],
   });
@@ -187,9 +202,10 @@ export function CartelaClaimPanel({ eventName, defaultPlayerName = "" }: Props) 
               <LayoutGrid className="w-4 h-4 text-purple-400" />
               {cards.length} cartelas
             </span>
-            <Button size="sm" variant="outline" className="h-8" onClick={load} disabled={loading}>
-              <RefreshCw className={cn("w-3.5 h-3.5", loading && "animate-spin")} />
-            </Button>
+            <span className="text-[11px] text-muted-foreground flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              ao vivo
+            </span>
           </div>
 
           <div className="grid grid-cols-[repeat(auto-fill,minmax(84px,1fr))] gap-2">
