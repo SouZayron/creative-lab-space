@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { LayoutGrid, Shuffle, Link2, Copy, Check, Loader2, Palette, Power, PowerOff, Scissors, UserPlus } from "lucide-react";
+import { LayoutGrid, Shuffle, Link2, Copy, Check, Loader2, Palette, Power, PowerOff, Scissors, UserPlus, UserMinus } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -162,6 +162,25 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
 
 
 
+  const removePlayer = async (card: GeneratedCard) => {
+    setSavingPlayerId(card.id);
+    const { error } = await supabase
+      .from("bingo_cards")
+      .update({ player_name: "" })
+      .eq("id", card.id);
+    setSavingPlayerId(null);
+    if (error) {
+      console.error("remove player error", error);
+      toast.error("Erro ao remover jogador");
+      return;
+    }
+    setGeneratedCards((prev) =>
+      prev.map((c) => (c.id === card.id ? { ...c, playerName: "" } : c))
+    );
+    setPlayerDrafts((prev) => ({ ...prev, [card.id]: "" }));
+    toast.success(`Cartela #${card.cardNumber} liberada`);
+  };
+
   const fullLink = (card: GeneratedCard) =>
     `${window.location.origin}${getCardPath(card.userName, card.cardNumber)}`;
 
@@ -258,7 +277,9 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
         }))
       );
 
-      toast.success(`${quantity} cartela${quantity > 1 ? "s" : ""} gerada${quantity > 1 ? "s" : ""}!`);
+      setPanelOpen(true);
+      onToggleModule?.(true);
+      toast.success(`${quantity} cartela${quantity > 1 ? "s" : ""} gerada${quantity > 1 ? "s" : ""}! Painel /games e roleta ativados.`);
     } catch (err) {
       console.error("Error generating cards:", err);
       toast.error("Erro ao gerar cartelas");
@@ -564,6 +585,18 @@ export function CartelasPanel({ moduleActive = false, onToggleModule }: Cartelas
                         "OK"
                       )}
                     </Button>
+                    {card.playerName && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-8 px-2 border-red-400/40 text-red-300 hover:bg-red-500/10"
+                        title="Remover jogador e liberar cartela"
+                        onClick={() => removePlayer(card)}
+                        disabled={savingPlayerId === card.id}
+                      >
+                        <UserMinus className="w-4 h-4" />
+                      </Button>
+                    )}
                   </div>
                   {card.playerName && (
                     <p className="text-[11px] text-green-400">
