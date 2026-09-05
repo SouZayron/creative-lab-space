@@ -70,14 +70,18 @@ const safeDel = (k: string) => {
   }
 };
 
-const COLOR_MAP: Record<string, string> = {
-  c1: "radial-gradient(circle at 35% 30%, #b98cff, #6a3dd8)",
-  c2: "radial-gradient(circle at 35% 30%, #ffe08a, #d9a324)",
-  c3: "radial-gradient(circle at 35% 30%, #ff9a9a, #c93f3f)",
-  c4: "radial-gradient(circle at 35% 30%, #ff9fc4, #d43d78)",
-  c5: "radial-gradient(circle at 35% 30%, #8fd8ff, #2f8fc9)",
+// Cores apenas visuais — o valor do balão é sorteado no servidor e NÃO tem
+// vínculo com a cor exibida. Cada balão recebe uma cor aleatória.
+const COLOR_MAP: Record<string, { body: string; shade: string; hi: string }> = {
+  c1: { body: "#7a4de8", shade: "#4c23b8", hi: "rgba(255,255,255,.85)" },
+  c2: { body: "#e8b93c", shade: "#a97a10", hi: "rgba(255,255,255,.85)" },
+  c3: { body: "#e05252", shade: "#a32626", hi: "rgba(255,255,255,.85)" },
+  c4: { body: "#e05a9b", shade: "#a32660", hi: "rgba(255,255,255,.85)" },
+  c5: { body: "#3fa9e0", shade: "#1c6fa3", hi: "rgba(255,255,255,.85)" },
+  c6: { body: "#43c98a", shade: "#1e8a58", hi: "rgba(255,255,255,.85)" },
+  c7: { body: "#e07840", shade: "#a34a1c", hi: "rgba(255,255,255,.85)" },
 };
-const COLORS = ["c1", "c2", "c3", "c4", "c5"];
+const COLORS = Object.keys(COLOR_MAP);
 
 interface FlyingBalloon {
   key: number;
@@ -313,7 +317,8 @@ const Balao = () => {
         <meta name="description" content="Estoura Balão — jogue todo dia, acumule pontos e dispute os prêmios da temporada." />
       </Helmet>
       <style>{`
-        @keyframes balao-rise { from { transform: translateY(0); } to { transform: translateY(calc(-100vh - 200px)); } }
+        @keyframes balao-rise { from { transform: translateY(0); } to { transform: translateY(calc(-100vh - 240px)); } }
+        @keyframes balao-sway { 0%,100% { transform: translateX(0) rotate(-2.5deg); } 50% { transform: translateX(14px) rotate(2.5deg); } }
         @keyframes balao-burst { to { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
         @keyframes balao-float { 0%{transform:translate(-50%,-50%) scale(.6);opacity:0} 20%{transform:translate(-50%,-60%) scale(1.15);opacity:1} 100%{transform:translate(-50%,-140%) scale(1);opacity:0} }
       `}</style>
@@ -430,25 +435,54 @@ const Balao = () => {
                   <p className="text-lg font-bold text-[#ffcf5c]">Jogo pausado pelo administrador.</p>
                 </div>
               )}
-              {flying.map((f) => (
-                <div
-                  key={f.key}
-                  onClick={(e) => handlePop(f, e)}
-                  className="absolute cursor-pointer w-[52px] h-[64px] hover:scale-105 transition-transform"
-                  style={{
-                    left: `${f.left}%`,
-                    bottom: "-140px",
-                    animation: `balao-rise ${f.duration}s linear forwards`,
-                    filter: "drop-shadow(0 6px 14px rgba(0,0,0,.4))",
-                  }}
-                >
+              {flying.map((f) => {
+                const c = COLOR_MAP[f.color];
+                return (
                   <div
-                    className="w-full h-[82%] rounded-[50%_50%_50%_50%/58%_58%_42%_42%] shadow-[inset_-8px_-10px_16px_rgba(0,0,0,.25),inset_6px_8px_14px_rgba(255,255,255,.18)]"
-                    style={{ background: COLOR_MAP[f.color] }}
-                  />
-                  <div className="absolute left-1/2 bottom-0 w-px h-[22px] bg-white/25" />
-                </div>
-              ))}
+                    key={f.key}
+                    onClick={(e) => handlePop(f, e)}
+                    className="absolute cursor-pointer w-[64px] h-[96px] transition-transform hover:scale-110"
+                    style={{
+                      left: `${f.left}%`,
+                      bottom: "-170px",
+                      animation: `balao-rise ${f.duration}s linear forwards`,
+                      filter: "drop-shadow(0 10px 18px rgba(0,0,0,.45))",
+                    }}
+                  >
+                    <div
+                      className="w-full h-full"
+                      style={{ animation: `balao-sway ${2.4 + (f.key % 5) * 0.35}s ease-in-out infinite` }}
+                    >
+                      <svg viewBox="0 0 64 96" className="w-full h-full">
+                        <defs>
+                          <radialGradient id={`bg-${f.key}`} cx="34%" cy="28%" r="75%">
+                            <stop offset="0%" stopColor={c.hi} stopOpacity="0.9" />
+                            <stop offset="28%" stopColor={c.body} />
+                            <stop offset="100%" stopColor={c.shade} />
+                          </radialGradient>
+                        </defs>
+                        {/* corpo */}
+                        <path
+                          d="M32 4 C14 4 4 20 4 36 C4 54 20 68 32 74 C44 68 60 54 60 36 C60 20 50 4 32 4 Z"
+                          fill={`url(#bg-${f.key})`}
+                        />
+                        {/* brilho */}
+                        <ellipse cx="21" cy="24" rx="7" ry="12" fill="rgba(255,255,255,.35)" transform="rotate(-18 21 24)" />
+                        {/* nó */}
+                        <path d="M28 74 L32 82 L36 74 Z" fill={c.shade} />
+                        {/* barbante */}
+                        <path
+                          d="M32 82 C30 86 34 88 32 92 C31 94 33 95 32 96"
+                          stroke="rgba(255,255,255,.4)"
+                          strokeWidth="1.4"
+                          fill="none"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                );
+              })}
               {fx.map((f) => (
                 <div
                   key={f.key}
