@@ -37,6 +37,8 @@ const AdminAltaVibe = lazy(() => import("./pages/AdminAltaVibe"));
 const Machine = lazy(() => import("./pages/Machine"));
 const AdminMachine = lazy(() => import("./pages/AdminMachine"));
 const Xat = lazy(() => import("./pages/Xat"));
+const Balao = lazy(() => import("./pages/Balao"));
+const AdminBalao = lazy(() => import("./pages/AdminBalao"));
 
 // Non-critical UI: defer until after first paint.
 const CookieConsent = lazy(() => import("./components/CookieConsent").then(m => ({ default: m.CookieConsent })));
@@ -49,7 +51,7 @@ const RouteFallback = () => (
   <div className="min-h-screen bg-background" aria-hidden="true" />
 );
 
-const HIDE_FLOATERS_ON = ["/machine", "/adminmachine", "/xat"];
+const HIDE_FLOATERS_ON = ["/machine", "/adminmachine", "/xat", "/balao", "/adminbalao"];
 const FloatingChrome = () => {
   const { pathname } = useLocation();
   if (HIDE_FLOATERS_ON.some(p => pathname.toLowerCase().startsWith(p))) return null;
@@ -96,6 +98,8 @@ const App = () => (
               <Route path="/machine" element={<Machine />} />
               <Route path="/adminmachine" element={<AdminMachine />} />
               <Route path="/xat" element={<Xat />} />
+              <Route path="/balao" element={<Balao />} />
+              <Route path="/adminbalao" element={<AdminBalao />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

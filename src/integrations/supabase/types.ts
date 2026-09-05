@@ -182,6 +182,165 @@ export type Database = {
         }
         Relationships: []
       }
+      balao_balloons: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          position: number
+          value: number
+          weight: number
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          id?: string
+          position?: number
+          value: number
+          weight?: number
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          position?: number
+          value?: number
+          weight?: number
+        }
+        Relationships: []
+      }
+      balao_logs: {
+        Row: {
+          base_points: number
+          bonus: number
+          created_at: string
+          id: string
+          name: string
+          points: number
+          user_id: string | null
+        }
+        Insert: {
+          base_points?: number
+          bonus?: number
+          created_at?: string
+          id?: string
+          name: string
+          points: number
+          user_id?: string | null
+        }
+        Update: {
+          base_points?: number
+          bonus?: number
+          created_at?: string
+          id?: string
+          name?: string
+          points?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      balao_settings: {
+        Row: {
+          end_date: string
+          id: number
+          is_open: boolean
+          max_pops_per_day: number
+          prizes: Json
+          rules_text: string
+          signups_locked: boolean
+          start_date: string
+          updated_at: string
+        }
+        Insert: {
+          end_date?: string
+          id?: number
+          is_open?: boolean
+          max_pops_per_day?: number
+          prizes?: Json
+          rules_text?: string
+          signups_locked?: boolean
+          start_date?: string
+          updated_at?: string
+        }
+        Update: {
+          end_date?: string
+          id?: number
+          is_open?: boolean
+          max_pops_per_day?: number
+          prizes?: Json
+          rules_text?: string
+          signups_locked?: boolean
+          start_date?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      balao_streak_rules: {
+        Row: {
+          bonus_pct: number
+          created_at: string
+          days: number
+          id: string
+        }
+        Insert: {
+          bonus_pct?: number
+          created_at?: string
+          days: number
+          id?: string
+        }
+        Update: {
+          bonus_pct?: number
+          created_at?: string
+          days?: number
+          id?: string
+        }
+        Relationships: []
+      }
+      balao_users: {
+        Row: {
+          blocked: boolean
+          created_at: string
+          id: string
+          last_play_date: string | null
+          name: string
+          password: string
+          points: number
+          pops_date: string | null
+          pops_today: number
+          streak: number
+          tz: string
+          updated_at: string
+        }
+        Insert: {
+          blocked?: boolean
+          created_at?: string
+          id?: string
+          last_play_date?: string | null
+          name: string
+          password: string
+          points?: number
+          pops_date?: string | null
+          pops_today?: number
+          streak?: number
+          tz?: string
+          updated_at?: string
+        }
+        Update: {
+          blocked?: boolean
+          created_at?: string
+          id?: string
+          last_play_date?: string | null
+          name?: string
+          password?: string
+          points?: number
+          pops_date?: string | null
+          pops_today?: number
+          streak?: number
+          tz?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bingo_admins: {
         Row: {
           created_at: string
@@ -1142,6 +1301,30 @@ export type Database = {
         Args: { p_name: string; p_tz?: string }
         Returns: Json
       }
+      balao_login: {
+        Args: { p_name: string; p_password: string }
+        Returns: {
+          blocked: boolean
+          created_at: string
+          id: string
+          last_play_date: string | null
+          name: string
+          password: string
+          points: number
+          pops_date: string | null
+          pops_today: number
+          streak: number
+          tz: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "balao_users"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      balao_pop: { Args: { p_name: string; p_tz?: string }; Returns: Json }
       cleanup_expired_bingo_cards: { Args: never; Returns: undefined }
       machine_login: {
         Args: { p_name: string; p_password: string }
@@ -1217,12 +1400,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1246,11 +1429,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1271,11 +1454,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1296,11 +1479,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -1313,11 +1496,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
