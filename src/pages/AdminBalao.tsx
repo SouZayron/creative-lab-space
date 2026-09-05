@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -74,7 +74,15 @@ const AdminBalao = () => {
   const [users, setUsers] = useState<BalaoUser[]>([]);
   const [logs, setLogs] = useState<LogRow[]>([]);
 
+  // evita que a atualização automática sobrescreva o que o admin está digitando
+  const dirtyRef = useRef(false);
+  const isTyping = () => {
+    const el = document.activeElement as HTMLElement | null;
+    return !!el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT");
+  };
+
   const fetchAll = useCallback(async () => {
+    if (isTyping() || dirtyRef.current) return;
     const [s, b, r, u, l] = await Promise.all([
       supabase.from("balao_settings").select("*").eq("id", 1).maybeSingle(),
       supabase.from("balao_balloons").select("*").order("position"),
@@ -92,6 +100,7 @@ const AdminBalao = () => {
     setLogs((l.data || []) as LogRow[]);
   }, []);
 
+
   useRealtimeTables({
     channelName: "balao-admin",
     enabled: authed,
@@ -108,8 +117,14 @@ const AdminBalao = () => {
       .from("balao_settings")
       .update({ ...patch, updated_at: new Date().toISOString() } as never)
       .eq("id", 1);
-    if (error) toast({ title: "Erro ao salvar", description: error.message, variant: "destructive" });
+    if (error) {
+      toast({ title: "Erro ao salvar", description: error.message, variant: "destructive" });
+    } else {
+      dirtyRef.current = false;
+      toast({ title: "Salvo!" });
+    }
   };
+
 
   const patchUser = async (id: string, patch: Partial<BalaoUser>) => {
     setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, ...patch } : u)));
@@ -172,6 +187,7 @@ const AdminBalao = () => {
 
   const setPrize = (i: number, field: "icon" | "label", value: string) => {
     if (!settings) return;
+    dirtyRef.current = true;
     const prizes = settings.prizes.map((p, idx) => (idx === i ? { ...p, [field]: value } : p));
     setSettings({ ...settings, prizes });
   };
@@ -263,7 +279,7 @@ const AdminBalao = () => {
               <Textarea
                 rows={7}
                 value={settings?.rules_text ?? ""}
-                onChange={(e) => setSettings((p) => (p ? { ...p, rules_text: e.target.value } : p))}
+                onChange={(e) => { dirtyRef.current = true; setSettings((p) => (p ? { ...p, rules_text: e.target.value } : p)); }}
                 className="bg-black/30 border-white/10 text-[11px]"
               />
               <Button size="sm" className="mt-2 bg-gradient-to-r from-[#9b5cff] to-[#6a3dd8]" onClick={() => saveSettings({ rules_text: settings?.rules_text ?? "" })}>
@@ -278,13 +294,13 @@ const AdminBalao = () => {
                 <div key={i} className="flex gap-2">
                   <Input value={p.icon} onChange={(e) => setPrize(i, "icon", e.target.value)} className="w-16 bg-black/30 border-white/10 text-center" />
                   <Input value={p.label} onChange={(e) => setPrize(i, "label", e.target.value)} className="flex-1 bg-black/30 border-white/10" />
-                  <Button size="sm" variant="outline" className="border-red-500/40 text-red-400" onClick={() => setSettings((s) => (s ? { ...s, prizes: s.prizes.filter((_, idx) => idx !== i) } : s))}>
+                  <Button size="sm" variant="outline" className="border-red-500/40 text-red-400" onClick={() => { dirtyRef.current = true; setSettings((s) => (s ? { ...s, prizes: s.prizes.filter((_, idx) => idx !== i) } : s)); }}>
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               ))}
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" className="border-purple-400/40" onClick={() => setSettings((s) => (s ? { ...s, prizes: [...s.prizes, { icon: "🎁", label: "PRÊMIO" }] } : s))}>
+                <Button size="sm" variant="outline" className="border-purple-400/40" onClick={() => { dirtyRef.current = true; setSettings((s) => (s ? { ...s, prizes: [...s.prizes, { icon: "🎁", label: "PRÊMIO" }] } : s)); }}>
                   <Plus className="w-4 h-4 mr-1" /> Adicionar
                 </Button>
                 <Button size="sm" className="bg-gradient-to-r from-[#9b5cff] to-[#6a3dd8]" onClick={() => saveSettings({ prizes: settings?.prizes ?? [] })}>
