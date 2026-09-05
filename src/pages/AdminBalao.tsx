@@ -74,7 +74,15 @@ const AdminBalao = () => {
   const [users, setUsers] = useState<BalaoUser[]>([]);
   const [logs, setLogs] = useState<LogRow[]>([]);
 
+  // evita que a atualização automática sobrescreva o que o admin está digitando
+  const dirtyRef = useRef(false);
+  const isTyping = () => {
+    const el = document.activeElement as HTMLElement | null;
+    return !!el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT");
+  };
+
   const fetchAll = useCallback(async () => {
+    if (isTyping() || dirtyRef.current) return;
     const [s, b, r, u, l] = await Promise.all([
       supabase.from("balao_settings").select("*").eq("id", 1).maybeSingle(),
       supabase.from("balao_balloons").select("*").order("position"),
@@ -91,6 +99,7 @@ const AdminBalao = () => {
     setUsers((u.data || []) as unknown as BalaoUser[]);
     setLogs((l.data || []) as LogRow[]);
   }, []);
+
 
   useRealtimeTables({
     channelName: "balao-admin",
