@@ -117,8 +117,14 @@ const AdminBalao = () => {
       .from("balao_settings")
       .update({ ...patch, updated_at: new Date().toISOString() } as never)
       .eq("id", 1);
-    if (error) toast({ title: "Erro ao salvar", description: error.message, variant: "destructive" });
+    if (error) {
+      toast({ title: "Erro ao salvar", description: error.message, variant: "destructive" });
+    } else {
+      dirtyRef.current = false;
+      toast({ title: "Salvo!" });
+    }
   };
+
 
   const patchUser = async (id: string, patch: Partial<BalaoUser>) => {
     setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, ...patch } : u)));
