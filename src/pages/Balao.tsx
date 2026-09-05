@@ -435,25 +435,54 @@ const Balao = () => {
                   <p className="text-lg font-bold text-[#ffcf5c]">Jogo pausado pelo administrador.</p>
                 </div>
               )}
-              {flying.map((f) => (
-                <div
-                  key={f.key}
-                  onClick={(e) => handlePop(f, e)}
-                  className="absolute cursor-pointer w-[52px] h-[64px] hover:scale-105 transition-transform"
-                  style={{
-                    left: `${f.left}%`,
-                    bottom: "-140px",
-                    animation: `balao-rise ${f.duration}s linear forwards`,
-                    filter: "drop-shadow(0 6px 14px rgba(0,0,0,.4))",
-                  }}
-                >
+              {flying.map((f) => {
+                const c = COLOR_MAP[f.color];
+                return (
                   <div
-                    className="w-full h-[82%] rounded-[50%_50%_50%_50%/58%_58%_42%_42%] shadow-[inset_-8px_-10px_16px_rgba(0,0,0,.25),inset_6px_8px_14px_rgba(255,255,255,.18)]"
-                    style={{ background: COLOR_MAP[f.color] }}
-                  />
-                  <div className="absolute left-1/2 bottom-0 w-px h-[22px] bg-white/25" />
-                </div>
-              ))}
+                    key={f.key}
+                    onClick={(e) => handlePop(f, e)}
+                    className="absolute cursor-pointer w-[64px] h-[96px] transition-transform hover:scale-110"
+                    style={{
+                      left: `${f.left}%`,
+                      bottom: "-170px",
+                      animation: `balao-rise ${f.duration}s linear forwards`,
+                      filter: "drop-shadow(0 10px 18px rgba(0,0,0,.45))",
+                    }}
+                  >
+                    <div
+                      className="w-full h-full"
+                      style={{ animation: `balao-sway ${2.4 + (f.key % 5) * 0.35}s ease-in-out infinite` }}
+                    >
+                      <svg viewBox="0 0 64 96" className="w-full h-full">
+                        <defs>
+                          <radialGradient id={`bg-${f.key}`} cx="34%" cy="28%" r="75%">
+                            <stop offset="0%" stopColor={c.hi} stopOpacity="0.9" />
+                            <stop offset="28%" stopColor={c.body} />
+                            <stop offset="100%" stopColor={c.shade} />
+                          </radialGradient>
+                        </defs>
+                        {/* corpo */}
+                        <path
+                          d="M32 4 C14 4 4 20 4 36 C4 54 20 68 32 74 C44 68 60 54 60 36 C60 20 50 4 32 4 Z"
+                          fill={`url(#bg-${f.key})`}
+                        />
+                        {/* brilho */}
+                        <ellipse cx="21" cy="24" rx="7" ry="12" fill="rgba(255,255,255,.35)" transform="rotate(-18 21 24)" />
+                        {/* nó */}
+                        <path d="M28 74 L32 82 L36 74 Z" fill={c.shade} />
+                        {/* barbante */}
+                        <path
+                          d="M32 82 C30 86 34 88 32 92 C31 94 33 95 32 96"
+                          stroke="rgba(255,255,255,.4)"
+                          strokeWidth="1.4"
+                          fill="none"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                );
+              })}
               {fx.map((f) => (
                 <div
                   key={f.key}
