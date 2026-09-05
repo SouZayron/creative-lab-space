@@ -317,7 +317,8 @@ const Balao = () => {
         <meta name="description" content="Estoura Balão — jogue todo dia, acumule pontos e dispute os prêmios da temporada." />
       </Helmet>
       <style>{`
-        @keyframes balao-rise { from { transform: translateY(0); } to { transform: translateY(calc(-100vh - 200px)); } }
+        @keyframes balao-rise { from { transform: translateY(0); } to { transform: translateY(calc(-100vh - 240px)); } }
+        @keyframes balao-sway { 0%,100% { transform: translateX(0) rotate(-2.5deg); } 50% { transform: translateX(14px) rotate(2.5deg); } }
         @keyframes balao-burst { to { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
         @keyframes balao-float { 0%{transform:translate(-50%,-50%) scale(.6);opacity:0} 20%{transform:translate(-50%,-60%) scale(1.15);opacity:1} 100%{transform:translate(-50%,-140%) scale(1);opacity:0} }
       `}</style>
