@@ -70,14 +70,18 @@ const safeDel = (k: string) => {
   }
 };
 
-const COLOR_MAP: Record<string, string> = {
-  c1: "radial-gradient(circle at 35% 30%, #b98cff, #6a3dd8)",
-  c2: "radial-gradient(circle at 35% 30%, #ffe08a, #d9a324)",
-  c3: "radial-gradient(circle at 35% 30%, #ff9a9a, #c93f3f)",
-  c4: "radial-gradient(circle at 35% 30%, #ff9fc4, #d43d78)",
-  c5: "radial-gradient(circle at 35% 30%, #8fd8ff, #2f8fc9)",
+// Cores apenas visuais — o valor do balão é sorteado no servidor e NÃO tem
+// vínculo com a cor exibida. Cada balão recebe uma cor aleatória.
+const COLOR_MAP: Record<string, { body: string; shade: string; hi: string }> = {
+  c1: { body: "#7a4de8", shade: "#4c23b8", hi: "rgba(255,255,255,.85)" },
+  c2: { body: "#e8b93c", shade: "#a97a10", hi: "rgba(255,255,255,.85)" },
+  c3: { body: "#e05252", shade: "#a32626", hi: "rgba(255,255,255,.85)" },
+  c4: { body: "#e05a9b", shade: "#a32660", hi: "rgba(255,255,255,.85)" },
+  c5: { body: "#3fa9e0", shade: "#1c6fa3", hi: "rgba(255,255,255,.85)" },
+  c6: { body: "#43c98a", shade: "#1e8a58", hi: "rgba(255,255,255,.85)" },
+  c7: { body: "#e07840", shade: "#a34a1c", hi: "rgba(255,255,255,.85)" },
 };
-const COLORS = ["c1", "c2", "c3", "c4", "c5"];
+const COLORS = Object.keys(COLOR_MAP);
 
 interface FlyingBalloon {
   key: number;
