@@ -187,6 +187,7 @@ const AdminBalao = () => {
 
   const setPrize = (i: number, field: "icon" | "label", value: string) => {
     if (!settings) return;
+    dirtyRef.current = true;
     const prizes = settings.prizes.map((p, idx) => (idx === i ? { ...p, [field]: value } : p));
     setSettings({ ...settings, prizes });
   };
@@ -278,7 +279,7 @@ const AdminBalao = () => {
               <Textarea
                 rows={7}
                 value={settings?.rules_text ?? ""}
-                onChange={(e) => setSettings((p) => (p ? { ...p, rules_text: e.target.value } : p))}
+                onChange={(e) => { dirtyRef.current = true; setSettings((p) => (p ? { ...p, rules_text: e.target.value } : p)); }}
                 className="bg-black/30 border-white/10 text-[11px]"
               />
               <Button size="sm" className="mt-2 bg-gradient-to-r from-[#9b5cff] to-[#6a3dd8]" onClick={() => saveSettings({ rules_text: settings?.rules_text ?? "" })}>
@@ -293,13 +294,13 @@ const AdminBalao = () => {
                 <div key={i} className="flex gap-2">
                   <Input value={p.icon} onChange={(e) => setPrize(i, "icon", e.target.value)} className="w-16 bg-black/30 border-white/10 text-center" />
                   <Input value={p.label} onChange={(e) => setPrize(i, "label", e.target.value)} className="flex-1 bg-black/30 border-white/10" />
-                  <Button size="sm" variant="outline" className="border-red-500/40 text-red-400" onClick={() => setSettings((s) => (s ? { ...s, prizes: s.prizes.filter((_, idx) => idx !== i) } : s))}>
+                  <Button size="sm" variant="outline" className="border-red-500/40 text-red-400" onClick={() => { dirtyRef.current = true; setSettings((s) => (s ? { ...s, prizes: s.prizes.filter((_, idx) => idx !== i) } : s)); }}>
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               ))}
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" className="border-purple-400/40" onClick={() => setSettings((s) => (s ? { ...s, prizes: [...s.prizes, { icon: "🎁", label: "PRÊMIO" }] } : s))}>
+                <Button size="sm" variant="outline" className="border-purple-400/40" onClick={() => { dirtyRef.current = true; setSettings((s) => (s ? { ...s, prizes: [...s.prizes, { icon: "🎁", label: "PRÊMIO" }] } : s)); }}>
                   <Plus className="w-4 h-4 mr-1" /> Adicionar
                 </Button>
                 <Button size="sm" className="bg-gradient-to-r from-[#9b5cff] to-[#6a3dd8]" onClick={() => saveSettings({ prizes: settings?.prizes ?? [] })}>
