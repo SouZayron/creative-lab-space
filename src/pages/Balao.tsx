@@ -323,50 +323,48 @@ const Balao = () => {
         @keyframes balao-float { 0%{transform:translate(-50%,-50%) scale(.6);opacity:0} 20%{transform:translate(-50%,-60%) scale(1.15);opacity:1} 100%{transform:translate(-50%,-140%) scale(1);opacity:0} }
       `}</style>
 
-      <div className="mx-auto h-screen max-w-[1600px] p-3 grid gap-3 grid-cols-1 lg:grid-cols-[280px_1fr_300px] overflow-y-auto lg:overflow-hidden">
+      <div className="mx-auto h-screen max-w-[1600px] p-3 grid gap-3 grid-cols-1 lg:grid-cols-[300px_1fr_300px] overflow-hidden">
         {/* LEFT */}
         <div className="flex flex-col gap-3 min-h-0">
-          <Panel>
+          <Panel className="shrink-0">
             <PanelTitle>SEU PERFIL</PanelTitle>
             {!user ? (
-              <div>
-                <div className="flex gap-2">
-                  <div className="flex-1 flex flex-col gap-1">
-                    <label className="text-[9.5px] text-purple-200/40 tracking-wide">NOME</label>
-                    <input
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      maxLength={18}
-                      placeholder="Ex: DjVibeKing"
-                      className="rounded-lg bg-black/30 border border-white/10 px-2.5 py-2 text-sm outline-none focus:border-[#9b5cff]"
-                    />
-                  </div>
-                  <div className="w-[84px] flex flex-col gap-1">
-                    <label className="text-[9.5px] text-purple-200/40 tracking-wide">SENHA</label>
-                    <input
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value.replace(/\D/g, ""))}
-                      type="password"
-                      inputMode="numeric"
-                      maxLength={4}
-                      placeholder="••••"
-                      onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-                      className="rounded-lg bg-black/30 border border-white/10 px-2.5 py-2 text-sm outline-none focus:border-[#9b5cff]"
-                    />
-                  </div>
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] text-purple-200/50 tracking-wide">NOME</label>
+                  <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    maxLength={18}
+                    placeholder="Ex: DjVibeKing"
+                    className="w-full rounded-lg bg-black/30 border border-white/10 px-3 py-2.5 text-sm outline-none focus:border-[#9b5cff]"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] text-purple-200/50 tracking-wide">SENHA (4 DÍGITOS)</label>
+                  <input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value.replace(/\D/g, ""))}
+                    type="password"
+                    inputMode="numeric"
+                    maxLength={4}
+                    placeholder="• • • •"
+                    onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                    className="w-full rounded-lg bg-black/30 border border-white/10 px-3 py-2.5 text-sm tracking-[0.35em] outline-none focus:border-[#9b5cff]"
+                  />
                 </div>
                 <button
                   onClick={handleLogin}
                   disabled={busy}
-                  className="mt-2 w-full rounded-lg py-2.5 text-[12.5px] font-bold text-white bg-gradient-to-br from-[#9b5cff] to-[#6a3dd8] shadow-[0_6px_16px_rgba(155,92,255,.32)] disabled:opacity-60"
+                  className="w-full rounded-lg py-2.5 text-[12.5px] font-bold text-white bg-gradient-to-br from-[#9b5cff] to-[#6a3dd8] shadow-[0_6px_16px_rgba(155,92,255,.32)] disabled:opacity-60"
                 >
                   ENTRAR
                 </button>
-                <div className="mt-2.5 flex gap-1.5 rounded-lg border border-[#ffcf5c]/30 bg-[#ffcf5c]/10 px-2.5 py-2 text-[11px] leading-relaxed text-[#f4dfa0]">
+                <div className="flex gap-1.5 rounded-lg border border-[#ffcf5c]/30 bg-[#ffcf5c]/10 px-2.5 py-2 text-[10.5px] leading-relaxed text-[#f4dfa0]">
                   🎈{" "}
                   <span>
                     <b className="text-white">Novo por aqui?</b> Nome + senha de 4 dígitos criam seu cadastro
-                    automaticamente. Use sempre os mesmos dois em todo acesso.
+                    automaticamente.
                   </span>
                 </div>
               </div>
@@ -385,7 +383,7 @@ const Balao = () => {
             )}
           </Panel>
 
-          <Panel>
+          <Panel className="shrink-0">
             <PanelTitle>PRÊMIOS DA TEMPORADA</PanelTitle>
             <div className="grid grid-cols-5 gap-1.5">
               {(settings?.prizes || []).map((p, i) => (
@@ -402,9 +400,9 @@ const Balao = () => {
             </div>
           </Panel>
 
-          <Panel className="flex-1 min-h-0 overflow-y-auto">
+          <Panel className="flex-1 min-h-0 overflow-hidden">
             <PanelTitle>REGRAS</PanelTitle>
-            <div className="text-[10.8px] leading-relaxed text-purple-200/70 whitespace-pre-line">
+            <div className="h-full overflow-y-auto text-[10.8px] leading-relaxed text-purple-200/70 whitespace-pre-line pr-1">
               {settings?.rules_text}
             </div>
           </Panel>
