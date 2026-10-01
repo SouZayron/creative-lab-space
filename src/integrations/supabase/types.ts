@@ -1505,6 +1505,7 @@ export type Database = {
         Args: { p_action: string; p_payload?: Json }
         Returns: Json
       }
+      daily_admin_report: { Args: never; Returns: Json }
       daily_claim: { Args: { p_token: string }; Returns: Json }
       daily_claim_admin: { Args: never; Returns: boolean }
       daily_current: { Args: { p_token: string }; Returns: Json }

@@ -15,6 +15,13 @@
       "when": 1790813687084,
       "tag": "0001_secure_daily_public_read_and_admin_bootstrap",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790813735674,
+      "tag": "0002_daily_admin_report_permissions",
+      "breakpoints": true
     }
   ]
 }
