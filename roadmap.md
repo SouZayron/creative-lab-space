@@ -1,0 +1,3 @@
+- [x] Build /daily and /admindaily based on the supplied October check-in game.
+- [x] Award daily coins equal to the day of the month through server validation.
+- [x] Add admin controls, player management and reports.
