@@ -39,6 +39,8 @@ const AdminMachine = lazy(() => import("./pages/AdminMachine"));
 const Xat = lazy(() => import("./pages/Xat"));
 const Balao = lazy(() => import("./pages/Balao"));
 const AdminBalao = lazy(() => import("./pages/AdminBalao"));
+const Daily = lazy(() => import("./pages/Daily"));
+const AdminDaily = lazy(() => import("./pages/AdminDaily"));
 
 // Non-critical UI: defer until after first paint.
 const CookieConsent = lazy(() => import("./components/CookieConsent").then(m => ({ default: m.CookieConsent })));
@@ -100,6 +102,8 @@ const App = () => (
               <Route path="/xat" element={<Xat />} />
               <Route path="/balao" element={<Balao />} />
               <Route path="/adminbalao" element={<AdminBalao />} />
+              <Route path="/daily" element={<Daily />} />
+              <Route path="/admindaily" element={<AdminDaily />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
