@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.daily_claim_admin() FROM authenticated; COMMENT ON FUNCTION public.daily_claim_admin() IS 'Disabled: administrative roles must be assigned explicitly by a trusted operator, never claimed by the first visitor.';

@@ -29,7 +29,7 @@ export default function Daily() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [tab, setTab] = useState<"calendar" | "wheel" | "ranking">("calendar");
-  const [week, setWeek] = useState(() => Math.ceil(Number(todaySaoPaulo().slice(-2)) / 7));
+  const [week, setWeek] = useState(() => todaySaoPaulo().slice(0, 7) === "2026-10" ? Math.ceil(Number(todaySaoPaulo().slice(-2)) / 7) : 1);
   const [busy, setBusy] = useState(false);
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
