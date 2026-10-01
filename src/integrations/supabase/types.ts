@@ -774,6 +774,55 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_challenges: {
+        Row: {
+          coins_taken: number
+          created_at: string
+          id: string
+          milestone_day: string
+          player_id: string
+          target_id: string
+        }
+        Insert: {
+          coins_taken?: number
+          created_at?: string
+          id?: string
+          milestone_day: string
+          player_id: string
+          target_id: string
+        }
+        Update: {
+          coins_taken?: number
+          created_at?: string
+          id?: string
+          milestone_day?: string
+          player_id?: string
+          target_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_challenges_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "daily_players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_challenges_player_id_milestone_day_fkey"
+            columns: ["player_id", "milestone_day"]
+            isOneToOne: true
+            referencedRelation: "daily_checkins"
+            referencedColumns: ["player_id", "day"]
+          },
+          {
+            foreignKeyName: "daily_challenges_target_id_fkey"
+            columns: ["target_id"]
+            isOneToOne: false
+            referencedRelation: "daily_players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       daily_checkins: {
         Row: {
           coins: number
@@ -1506,6 +1555,17 @@ export type Database = {
         Returns: Json
       }
       daily_admin_report: { Args: never; Returns: Json }
+      daily_available_challenges: {
+        Args: { p_id: string }
+        Returns: {
+          milestone_day: string
+        }[]
+      }
+      daily_challenge: {
+        Args: { p_target_id: string; p_token: string }
+        Returns: Json
+      }
+      daily_challenge_status: { Args: { p_token: string }; Returns: Json }
       daily_claim: { Args: { p_token: string }; Returns: Json }
       daily_claim_admin: { Args: never; Returns: boolean }
       daily_current: { Args: { p_token: string }; Returns: Json }
