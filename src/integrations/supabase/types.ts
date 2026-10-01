@@ -1506,8 +1506,10 @@ export type Database = {
         Returns: Json
       }
       daily_claim: { Args: { p_token: string }; Returns: Json }
+      daily_claim_admin: { Args: never; Returns: boolean }
       daily_current: { Args: { p_token: string }; Returns: Json }
       daily_is_admin: { Args: never; Returns: boolean }
+      daily_logout: { Args: { p_token: string }; Returns: undefined }
       daily_player_view: {
         Args: { p: Database["public"]["Tables"]["daily_players"]["Row"] }
         Returns: Json

@@ -8,6 +8,13 @@
       "when": 1790813670927,
       "tag": "0000_create_daily_checkin_game",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790813687084,
+      "tag": "0001_secure_daily_public_read_and_admin_bootstrap",
+      "breakpoints": true
     }
   ]
 }
