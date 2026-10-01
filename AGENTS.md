@@ -1,0 +1,4 @@
+- The Vibe Check-in game uses dedicated Cloud tables and server-validated RPCs with hashed passwords and expiring player tokens, so browser changes cannot mint VibeCoins.
+- Daily administration uses authenticated accounts with a separate `daily_admin_roles` table, not a client password, because controls must be server-authorized.
+- Never expose self-service assignment of `daily_admin_roles`; authorize the first administrator explicitly after their account exists, because first-visitor claims enable takeover.
+- Daily rewards and date gating use São Paulo calendar time server-side so one calendar day always grants exactly its day number.

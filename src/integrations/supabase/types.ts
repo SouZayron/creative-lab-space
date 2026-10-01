@@ -759,6 +759,177 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_admin_roles: {
+        Row: {
+          role: string
+          user_id: string
+        }
+        Insert: {
+          role?: string
+          user_id: string
+        }
+        Update: {
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      daily_checkins: {
+        Row: {
+          coins: number
+          created_at: string
+          day: string
+          id: string
+          player_id: string
+        }
+        Insert: {
+          coins: number
+          created_at?: string
+          day: string
+          id?: string
+          player_id: string
+        }
+        Update: {
+          coins?: number
+          created_at?: string
+          day?: string
+          id?: string
+          player_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_checkins_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "daily_players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_players: {
+        Row: {
+          blocked: boolean
+          coins: number
+          created_at: string
+          id: string
+          name: string
+          password_hash: string
+        }
+        Insert: {
+          blocked?: boolean
+          coins?: number
+          created_at?: string
+          id?: string
+          name: string
+          password_hash: string
+        }
+        Update: {
+          blocked?: boolean
+          coins?: number
+          created_at?: string
+          id?: string
+          name?: string
+          password_hash?: string
+        }
+        Relationships: []
+      }
+      daily_sessions: {
+        Row: {
+          expires_at: string
+          player_id: string
+          token_hash: string
+        }
+        Insert: {
+          expires_at: string
+          player_id: string
+          token_hash: string
+        }
+        Update: {
+          expires_at?: string
+          player_id?: string
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_sessions_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "daily_players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_settings: {
+        Row: {
+          end_date: string
+          id: number
+          is_open: boolean
+          signups_open: boolean
+          spin_cost: number
+          start_date: string
+          updated_at: string
+          welcome_coins: number
+          wheel_open: boolean
+          wheel_segments: Json
+        }
+        Insert: {
+          end_date?: string
+          id?: number
+          is_open?: boolean
+          signups_open?: boolean
+          spin_cost?: number
+          start_date?: string
+          updated_at?: string
+          welcome_coins?: number
+          wheel_open?: boolean
+          wheel_segments?: Json
+        }
+        Update: {
+          end_date?: string
+          id?: number
+          is_open?: boolean
+          signups_open?: boolean
+          spin_cost?: number
+          start_date?: string
+          updated_at?: string
+          welcome_coins?: number
+          wheel_open?: boolean
+          wheel_segments?: Json
+        }
+        Relationships: []
+      }
+      daily_spins: {
+        Row: {
+          cost: number
+          created_at: string
+          id: string
+          player_id: string
+          value: number
+        }
+        Insert: {
+          cost: number
+          created_at?: string
+          id?: string
+          player_id: string
+          value: number
+        }
+        Update: {
+          cost?: number
+          created_at?: string
+          id?: string
+          player_id?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_spins_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "daily_players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       game_picks: {
         Row: {
           created_at: string
@@ -1326,6 +1497,25 @@ export type Database = {
       }
       balao_pop: { Args: { p_name: string; p_tz?: string }; Returns: Json }
       cleanup_expired_bingo_cards: { Args: never; Returns: undefined }
+      daily_access: {
+        Args: { p_name: string; p_password: string }
+        Returns: Json
+      }
+      daily_admin: {
+        Args: { p_action: string; p_payload?: Json }
+        Returns: Json
+      }
+      daily_admin_report: { Args: never; Returns: Json }
+      daily_claim: { Args: { p_token: string }; Returns: Json }
+      daily_claim_admin: { Args: never; Returns: boolean }
+      daily_current: { Args: { p_token: string }; Returns: Json }
+      daily_is_admin: { Args: never; Returns: boolean }
+      daily_logout: { Args: { p_token: string }; Returns: undefined }
+      daily_player_view: {
+        Args: { p: Database["public"]["Tables"]["daily_players"]["Row"] }
+        Returns: Json
+      }
+      daily_spin: { Args: { p_token: string }; Returns: Json }
       machine_login: {
         Args: { p_name: string; p_password: string }
         Returns: {
