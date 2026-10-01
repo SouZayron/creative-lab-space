@@ -29,6 +29,13 @@
       "when": 1790813872618,
       "tag": "0003_disable_unclaimed_daily_admin_bootstrap",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790814398734,
+      "tag": "0004_fix_daily_crypto_lookup",
+      "breakpoints": true
     }
   ]
 }
