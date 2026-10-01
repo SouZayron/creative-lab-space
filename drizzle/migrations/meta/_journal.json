@@ -36,6 +36,13 @@
       "when": 1790814398734,
       "tag": "0004_fix_daily_crypto_lookup",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790814476372,
+      "tag": "0005_daily_seven_day_challenge",
+      "breakpoints": true
     }
   ]
 }
