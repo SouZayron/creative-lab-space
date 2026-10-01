@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790813670927,
+      "tag": "0000_create_daily_checkin_game",
+      "breakpoints": true
+    }
+  ]
+}
