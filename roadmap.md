@@ -4,3 +4,4 @@
 - [ ] Authorize the first administrator — waiting for an administrative account and its owner to be identified; no account currently exists.
 - [ ] Corrigir a entrada por nome e senha no jogo diário (funções de senha e sessão).
 - [ ] Ajustar o bloco de entrada de /daily para 820 × 380 na horizontal.
+- [ ] Permitir que cada 7 check-ins consecutivos o jogador escolha outro jogador para perder 5 VibeCoins, com validação no servidor.
